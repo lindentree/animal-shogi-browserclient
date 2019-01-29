@@ -1,0 +1,244 @@
+body {
+  background-image: url('./assets/cloud forest.jpg');
+  background-size: cover;
+  background-color: lightblue;
+}
+
+h1 {
+  text-align: justify;
+  margin: auto;
+  width: 50%;
+}
+
+.board {
+  height: 600px;
+  width: 600px;
+  padding-top: 10px;
+  padding-left: 50px;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  margin:auto;
+}
+
+#one {
+  float: left;
+  padding-left: 150px;
+}
+
+.square {
+  float:left;
+  position: relative;
+  width: 30%;
+  padding-bottom : 30%; 
+  background-position: center center;
+  background-repeat: no-repeat;
+  border: 2px solid grey !important;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.img1 {
+  background-image:url('./assets/tiles/tile1.png'); 
+    
+}
+
+.img2 {
+  background-image:url('./assets/tiles/tile2.png'); 
+    
+}
+
+.img3 { 
+  background-image:url('./assets/tiles/tile3.png');  
+}
+
+.img4 {
+  background-size: cover;
+  background-image:url('./assets/tiles/tile4.png'); 
+    
+}
+
+.img5 {
+  background-image:url('./assets/tiles/tile5.png'); 
+    
+}
+
+.img6 {
+  background-image:url('./assets/tiles/tile6.png'); 
+}
+
+.img7 {
+  background-image:url('./assets/tiles/tile7.png'); 
+} 
+
+.img8 {
+ 
+  background-image:url('./assets/tiles/tile8.png'); 
+}
+
+.img9 {
+  background-image:url('./assets/tiles/tile9.png'); 
+}
+
+.img10 { 
+  background-image:url('./assets/tiles/tile10.png'); 
+}
+
+.img11 { 
+  background-image:url('./assets/tiles/tile11.png'); 
+}
+
+.img12 { 
+  background-size: cover;
+  background-image:url('./assets/tiles/tile12.png'); 
+}
+
+
+#skyStand {
+    float: right;
+    width: 30%;
+    padding-right: 150px;
+    padding-top: 0px;
+    margin: 25px;
+}
+
+#PlayerInfo {
+    float: right;
+    width: 30%;
+    padding-right: 150px;
+    padding-top: 0px;
+    margin: 10px 25px 195px 100px;
+}
+
+#forestStand {
+    float: right;
+    width: 30%;
+    padding-right: 150px;
+    padding-top: 0px;
+    margin: 25px 25px 125px 125px;
+}
+
+.playerElephant { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/forest/elephant.png');
+    position: absolute;
+}
+
+.playerChick { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/forest/chick.png');
+    position: absolute; 
+}
+
+.playerGiraffe { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/forest/giraffe.png');
+    position: absolute;
+}
+
+.playerHen { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/forest/hen.png');
+    position: absolute;
+}
+
+.playerLion { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/forest/lion.png');
+    position: absolute;
+}
+
+.enemyElephant { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content: url('./assets/pieces/sky/elephant.png');
+    position: absolute;
+}
+
+.enemyChick { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content: url('./assets/pieces/sky/chick.png');
+    position: absolute; 
+}
+
+.enemyGiraffe { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/sky/giraffe.png');
+    position: absolute; 
+}
+
+.enemyHen { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/sky/hen.png');
+    position: absolute;
+}
+
+.enemyLion { 
+    height: 85%;
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    content:url('./assets/pieces/sky/lion.png');
+    position: absolute;
+}
+
+.piece-stand {
+  float: right;
+}
