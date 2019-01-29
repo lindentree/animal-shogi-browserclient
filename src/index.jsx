@@ -344,7 +344,7 @@ let initialForestStandState = [
                  null, null, null, null, null, null
                 ];
 function refreshPage(){ 
-    window.location.reload(); 
+  setTimeout(location.reload.bind(location), 2500);; 
 }
 
 class App extends React.Component {
@@ -366,7 +366,6 @@ class App extends React.Component {
     this.cycleWinChecker = this.cycleWinChecker.bind(this);
     this.immediateWin = this.immediateWin.bind(this);
   }
-
 
 
   componentDidMount() {
@@ -391,7 +390,7 @@ class App extends React.Component {
             continue;
           } else if (boardState[i][j].isCaptured) {
             let loser = boardState[i][j].currentPlayer;
-            console.log('winner', loser)
+            //console.log('winner', loser)
               if (loser === 1) {
                 return <div> Player 2 Wins!</div>
               } else {
@@ -406,7 +405,7 @@ class App extends React.Component {
 
   immediateWin (flag) {
     if (flag) {
-      console.log('GAME OVER')
+      //console.log('GAME OVER')
      this.setState({
       activated: true
     });
@@ -509,7 +508,7 @@ class App extends React.Component {
       initial[x][y] = source;
       initial[row][col] = null;
       this.switchPlayer();
-      console.log('outer confirm', this.state.currentPlayer);
+      //console.log('outer confirm', this.state.currentPlayer);
     }
 
   }
@@ -540,14 +539,13 @@ class App extends React.Component {
   //   this.setState({movingPiece: null});
   //   this.setState({validMoves: null});
   // }
-
+ //{this.state.activated ? setTimeout(refreshPage, 3000) : null}
   render () {
     return (
       <div>
         <Game status={this.state.initial} handleMove={this.hardCode} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
-        <GameStatus test={"John"}/>
-        {this.state.activated ? <div className="gamestatus">GAME OVER </div> : null}
-        {this.state.activated ? setTimeout(refreshPage, 3000) : null}
+        {this.state.activated ? <div className="gamestatus"> GAME OVER </div> : null}
+        {this.state.activated ? refreshPage() : null}
       </div>)
   }
 }

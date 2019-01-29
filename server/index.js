@@ -21,7 +21,7 @@ app.get('/users', function (req, res) {
 });
 
 app.post('/create', function (req, res) {
-  
+  req.data
 });
 
 app.patch('/update', function (req, res) {
