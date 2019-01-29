@@ -242,3 +242,8 @@ h1 {
 .piece-stand {
   float: right;
 }
+
+.gamestatus {
+  font-size: 150%;
+
+}

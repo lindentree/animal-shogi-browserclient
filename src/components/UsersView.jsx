@@ -27,7 +27,7 @@ class UsersView extends React.Component {
 
   handleSubmit(event) {
     let formData = event.target.value;
-    axios.post('/rsvps', )
+    axios.post('/create', )
       .done((data) => {
 
       })

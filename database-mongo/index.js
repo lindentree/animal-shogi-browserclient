@@ -31,6 +31,17 @@ var updateUser = function(name, update, callback) {
   });
 };
 
+var createUser = function(name, update, callback) {
+  User.find({'name': name}, function(err, items) {
+    if(err) {
+      callback(err, null);
+    } else {
+      user[update]++;
+      callback(null, items);
+    }
+  });
+};
+
 var selectAll = function(callback) {
   User.find({}, function(err, items) {
     if(err) {

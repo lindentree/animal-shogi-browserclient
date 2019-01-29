@@ -343,6 +343,9 @@ let initialSkyStandState = [
 let initialForestStandState = [
                  null, null, null, null, null, null
                 ];
+function refreshPage(){ 
+    window.location.reload(); 
+}
 
 class App extends React.Component {
   constructor(props) {
@@ -355,11 +358,13 @@ class App extends React.Component {
       moveInProgress: false,
       movingPiece: null,
       validMoves: null,
-      captures:[]
+      captures:[],
+      activated: false
     }
 
     this.hardCode = this.hardCode.bind(this);
     this.cycleWinChecker = this.cycleWinChecker.bind(this);
+    this.immediateWin = this.immediateWin.bind(this);
   }
 
 
@@ -401,7 +406,10 @@ class App extends React.Component {
 
   immediateWin (flag) {
     if (flag) {
-      console.log('Game Over')
+      console.log('GAME OVER')
+     this.setState({
+      activated: true
+    });
     }
 
   }
@@ -492,12 +500,9 @@ class App extends React.Component {
       let x = row + source.automove[0];
       let y = col + source.automove[1];
       let dest = initial[x][y]
-      if (dest) {
-        if (dest.isCaptured !== undefined) {
-          console.log("win", dest.isCaptured)
-          dest.isCaptured = true;
-          this.winChecker();
-        }
+      if (dest && dest.isCaptured !== undefined) {
+        dest.isCaptured = true;
+        this.immediateWin(dest.isCaptured);
       }
 
       
@@ -541,6 +546,8 @@ class App extends React.Component {
       <div>
         <Game status={this.state.initial} handleMove={this.hardCode} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
         <GameStatus test={"John"}/>
+        {this.state.activated ? <div className="gamestatus">GAME OVER </div> : null}
+        {this.state.activated ? setTimeout(refreshPage, 3000) : null}
       </div>)
   }
 }
