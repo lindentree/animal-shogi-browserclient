@@ -38,14 +38,16 @@ h1 {
     padding-left: 150px;
 }
 
-#enemyBench {
+#skyStand {
+    position: relative;
     float: right;
     width: 30%;
     padding-right: 120px;
     padding-top: 0px;
 }
 
-#playerBench {
+#forestStand {
+    position: relative;
     float: right;
     width: 30%;
     padding-right: 120px;

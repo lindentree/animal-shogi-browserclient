@@ -242,6 +242,7 @@ let forestLion = {
       ],
       location: [3, 1],
       automove: [-1, -1],
+      active: false,
       isCaptured: false,
       reachedOpp: false
 
