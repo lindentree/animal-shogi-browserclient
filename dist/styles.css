@@ -97,6 +97,35 @@ h1 {
   background-image:url('./assets/tiles/tile12.png'); 
 }
 
+.img13 { 
+  background-size: cover;
+  background-image:url('./assets/bench/1.png'); 
+}
+
+.img14 { 
+  background-size: cover;
+  background-image:url('./assets/bench/2.png'); 
+}
+
+.img15 { 
+  background-size: cover;
+  background-image:url('./assets/bench/3.png'); 
+}
+
+.img16 { 
+  background-size: cover;
+  background-image:url('./assets/bench/4.png'); 
+}
+
+.img17 { 
+  background-size: cover;
+  background-image:url('./assets/bench/5.png'); 
+}
+
+.img18 { 
+  background-size: cover;
+  background-image:url('./assets/bench/6.png'); 
+}
 
 #skyStand {
     position: relative;

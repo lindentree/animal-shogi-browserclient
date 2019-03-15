@@ -8,10 +8,11 @@ export default class SkyPieceStand extends React.Component {
     super(props);
   }
 
-  renderSquare(i) {
+  renderSquare(i, id) {
      return (
       <Square 
         piece= {this.props.status[i]} 
+        id= {id}
       />
     );
   }
@@ -26,12 +27,12 @@ export default class SkyPieceStand extends React.Component {
       <div>
   
         <div id="skyStand">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
+          {this.renderSquare(0, 13)}
+          {this.renderSquare(1, 14)}
+          {this.renderSquare(2, 15)}
+          {this.renderSquare(3, 16)}
+          {this.renderSquare(4, 17)}
+          {this.renderSquare(5, 18)}
         </div>
       </div>
     );
