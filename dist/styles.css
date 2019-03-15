@@ -99,27 +99,29 @@ h1 {
 
 
 #skyStand {
+    position: relative;
     float: right;
     width: 30%;
-    padding-right: 150px;
+    margin-right: -150px;
     padding-top: 0px;
     margin: 25px;
 }
 
 #PlayerInfo {
+    position: relative;
     float: right;
     width: 30%;
-    padding-right: 150px;
+    margin-right: -250px;
     padding-top: 0px;
-    margin: 10px 25px 195px 100px;
+    margin: 25px;
 }
 
 #forestStand {
     float: right;
     width: 30%;
-    padding-right: 150px;
-    padding-top: 0px;
-    margin: 25px 25px 125px 125px;
+    margin-right: -150px;
+    padding-top: 100px;
+    margin: 25px;
 }
 
 .playerElephant { 
