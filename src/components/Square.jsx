@@ -10,11 +10,11 @@ function Square(props) {
        <div className="cell"></div>
     </button>
    }
-
+ 
 
   return (
 
-  <div onClick={props.handleMove.bind(this, props.row, props.col)}>
+  <div onClick={props.handleClick.bind(this, props.row, props.col)}>
     <button className={"square img" + props.id} >
       <div className={"cell " + props.piece.name}></div>
     </button>

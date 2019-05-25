@@ -287,35 +287,35 @@ class App extends React.Component {
   handleClick (e) {
     e.preventDefault();
     this.setState({moveInProgress: true})
-    console.log('firing')
+    console.log(e, 'firing')
     alert(this.state.moveInProgress)
 
   }
 
-  hardCode (row, col) {
-    const {currentPlayer, moveInProgress, initial, validMoves} = this.state;
-    let source = initial[row][col];
+  // hardCode (row, col) {
+  //   const {currentPlayer, moveInProgress, initial, validMoves} = this.state;
+  //   let source = initial[row][col];
     
-    if (source.owner !== currentPlayer) {
+  //   if (source.owner !== currentPlayer) {
      
-      return;
+  //     return;
       
-    } else if (source !== null){
-      let x = row + source.automove[0];
-      let y = col + source.automove[1];
-      let dest = initial[x][y]
-      if (dest && dest.isCaptured !== undefined) {
-        dest.isCaptured = true;
-        this.immediateWin(dest.isCaptured);
-      }
+  //   } else if (source !== null){
+  //     let x = row + source.automove[0];
+  //     let y = col + source.automove[1];
+  //     let dest = initial[x][y]
+  //     if (dest && dest.isCaptured !== undefined) {
+  //       dest.isCaptured = true;
+  //       this.immediateWin(dest.isCaptured);
+  //     }
 
       
-      initial[x][y] = source;
-      initial[row][col] = null;
-      this.switchPlayer();
-    }
+  //     initial[x][y] = source;
+  //     initial[row][col] = null;
+  //     this.switchPlayer();
+  //   }
 
-  }
+  // }
  
   // completeMove(row, col, movingPiece = this.state.movingPiece) {
     
@@ -347,7 +347,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Game status={this.state.initial} handleMove={this.hardCode} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
+        <Game status={this.state.initial} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
         {this.state.activated ? <div className="gamestatus"> GAME OVER </div> : null}
         {this.state.activated ? refreshPage() : null}
       </div>)
