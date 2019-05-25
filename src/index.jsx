@@ -4,17 +4,7 @@ import axios from 'axios';
 import Game from './components/Game.jsx';
 import GameStatus from './components/GameStatus.jsx';
 
-
- 
-
-  /**************************
-  *      HELPER METHODS     *
-  **************************/
-
-  /**
-   * Returns a random integer between min (inclusive) and max (inclusive).
-   * @returns {number}
-  */
+   
   function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
@@ -69,38 +59,25 @@ import GameStatus from './components/GameStatus.jsx';
 
     return found;
   }
+
+
   
 let forestLion = {
     name: 'playerLion',
     owner: 1,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-        { row: 1,  col: 0  }, // South
-        { row: 0,  col: -1 }, // West
-        { row: 0,  col: 1  }, // East
-        { row: -1, col: -1 }, // Northwest
-        { row: 1,  col: -1 }, // Southwest
-        { row: -1, col: 1  }, // Northeast
-        { row: 1,  col: 1  } // Southeast
-      ],
-      location: [3, 1],
-      automove: [-1, -1],
-      active: false,
-      isCaptured: false,
-      isUnderCheck: false,
-      reachedOpp: false
+    position: [3, 1],
+    active: false,
+    isCaptured: false,
+    isUnderCheck: false,
+    reachedOpp: false
 
     };
   
   let forestChick = {
     name: 'playerChick',
     owner: 1,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-      ],
-      location: [2, 1],
-      automove: [-1, 0],
-      reachedOpp: false
+    position: [2, 1],
+    reachedOpp: false
   };
 
   let forestGiraffe = {
@@ -109,77 +86,54 @@ let forestLion = {
     moveDirections: [
         { row: -1, col: 0  }, // North
       ],
-      location: [3, 2],
-      automove: [-1, 0]
+    position: [3, 2],
     };
 
   let forestElephant = {
     name: 'playerElephant',
     owner: 1,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-      ],
-      location: [3, 0],
-      automove: [-1, 1]
+    position: [3, 0],
     };
 
   let skyLion = {
     name: 'enemyLion',
-    owner: 2,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-        { row: 1,  col: 0  }, // South
-        { row: 0,  col: -1 }, // West
-        { row: 0,  col: 1  }, // East
-        { row: -1, col: -1 }, // Northwest
-        { row: 1,  col: -1 }, // Southwest
-        { row: -1, col: 1  }, // Northeast
-        { row: 1,  col: 1  } // Southeast
-      ],
-      location: [0, 1],
-      automove: [1, 0],
-      isCaptured: false,
-      isUnderCheck: false,
-      reachedOpp: false
+    owner: 2,   
+    position: [0, 1],
+    isCaptured: false,
+    isUnderCheck: false,
+    reachedOpp: false
 
     };
 
   let skyChick = {
     name: 'enemyChick',
     owner: 2,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-      ],
-      location: [1, 1],
-      automove: [1, 0],
-      reachedOpp: false
+    position: [1, 1],
+    reachedOpp: false
     };
 
   let skyGiraffe = {
     name: 'enemyGiraffe',
     owner: 2,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-      ],
-      location: [0, 0],
-      automove: [1, 0]
+    position: [0, 0],
     };
 
   let skyElephant = {
     name: 'enemyElephant',
     owner: 2,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-      ],
-      location: [0, 2],
-      automove: [1, -1]
+    position: [0, 2],
     };
 
+
+
+
+let allPieces = [skyGiraffe, skyLion, skyElephant, skyChick, forestChick, forestElephant, forestLion, forestGiraffe]
+
 let initBoardState = [
-                  [skyGiraffe, skyLion, skyElephant],
-                  [null, skyChick, null],
-                  [null, forestChick, null],
-                  [forestElephant, forestLion, forestGiraffe]
+                  [null, null, null],
+                  [null, null, null],
+                  [null, null, null],
+                  [null, null, null]
                 ];
 
 let initialSkyStandState = [
@@ -202,20 +156,24 @@ class App extends React.Component {
       initial: initBoardState,
       initSkyStand: initialSkyStandState,
       initForestStand: initialForestStandState,
+      pieces: allPieces,
       currentPlayer: 1, 
       moveInProgress: false,
       captures:[],
       activated: false
     }
 
-    this.hardCode = this.hardCode.bind(this);
     this.cycleWinChecker = this.cycleWinChecker.bind(this);
     this.immediateWin = this.immediateWin.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.checkPiecePosition = this.checkPiecePosition.bind(this);
   }
 
 
   componentDidMount() {
+
+    this.checkPiecePosition()
+
     axios.get('/users')
      .then(function (response) {
        console.log(response);
@@ -286,9 +244,30 @@ class App extends React.Component {
 
   handleClick (e) {
     e.preventDefault();
-    this.setState({moveInProgress: true})
-    console.log(e, 'firing')
+    let status = this.state.moveInProgress;
+    this.setState({moveInProgress: !status})
+    console.log(e.target, 'firing')
+    console.log(e.target, 'test')
     alert(this.state.moveInProgress)
+
+  }
+
+  checkPiecePosition () {
+    let pieces = this.state.pieces;
+    let board = this.state.initial.slice();
+
+    pieces.map(piece => {
+      //console.log(piece.location[0])
+      let x = piece.position[0];
+      console.log("inner testing", board)
+      let y = piece.position[1];
+      board[x][y] = piece;
+
+    })  
+   
+    this.setState({initial: board})
+
+     console.log("test", board)
 
   }
 

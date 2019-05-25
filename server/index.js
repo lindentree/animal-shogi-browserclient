@@ -28,7 +28,7 @@ app.patch('/update', function (req, res) {
   
 });
 
-app.listen(process.env.PORT || 3005, function() {
-  console.log('listening on port 3005!');
+app.listen(process.env.PORT || 3004, function() {
+  console.log('listening on port 3004!');
 });
 
