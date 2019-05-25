@@ -3,166 +3,9 @@ import ReactDOM from 'react-dom';
 import axios from 'axios';
 import Game from './components/Game.jsx';
 import GameStatus from './components/GameStatus.jsx';
-import $ from 'jquery';
-  
-  /**************************
-  *    POSITION VARIABLES   *
-  **************************/
-  
-  // The position of the selected piece
-  var selectedPosition = { row: 0, col: 0 };
 
-  // The position of the attacked cell
-  var attackPosition = { row: 0, col: 0 };
 
-  // Difference between selected and attack cells
-  var differencePosition = { row: 0, col: 0 };
-
-  /**************************
-  *    PIECE VALIDATION     *
-  **************************/
-
-  // Did we select a cell that is occupied?
-  var selectedCell = false;
-
-  // Did we select a cell to attack?
-  var attackedCell = false;
-
-  // Did we select a bench piece? 
-  var selectedEnemyBenchPiece = false;
-  var selectedPlayerBenchPiece = false;
-  var selectedPlayerBenchPiecePosition = { col: 0 };
-  var selectedEnemyBenchPiecePosition = { col: 0 }; 
-
-  /********************************
-  *    GAME EVALUATION VARIABLES  *
-  *********************************/
-
-  var playerLionCaptured = false;
-  var enemyLionCaptured = false;
-  var seenPlayerLion = false;
-  var seenEnemyLion = false;
-  var gameOver = false;
-
-  /**************************
-  *      TURN VARIABLES     *
-  **************************/
-
-  var playerTurn = true;
-  var enemyTurn = false;
-  var turnCount = 1;
-
-  // Has either player moved?
-  var playerMoved = false;
-  var enemyMoved = false;
-
-  var currentTurn = null; 
-
-  /**************************
-  *  PROMOTION VARIABLES  *
-  **************************/
-  
-  var playerChickPromotion = false;
-  var playerChickPosition = { row: 0, col: 0 };
-  var enemyChickPromotion = false;
-  var enemyChickPosition = { row: 0, col: 0 };
-
-  // If Player moved a chick (not placed)
-  // it is a legitimate candidate for promotion to Hen
-  var movedPlayerChick = false;
-
-  // If Enemy moved a chick (not placed)
-  // it is legitimate candidate for promotion to Hen
-  var movedEnemyChick = false;
-
-  /**************************
-  *     LEGITIMATE MOVES    *
-  **************************/
-  
-
-    // {
-    //   'enemyChick' : [{ row: 1, col: 0 }]  // South
-    // },
-    // {
-    //   'enemyLion' : [
-    //     { row: 1,  col: 0  }, // South
-    //     { row: -1, col: 0  }, // North
-    //     { row: 0,  col: -1 }, // East
-    //     { row: 0,  col: 1  }, // West
-    //     { row: 1,  col: -1 }, // Southwest
-    //     { row: -1, col: -1 }, // Northwest
-    //     { row: 1,  col: 1  }, // Southeast
-    //     { row: -1, col: 1  }, // Northeast
-    //     ]
-    // },
-    // {
-    //   'enemyElephant' : [
-    //     { row: 1,  col: -1 }, // Southwest
-    //     { row: -1, col: -1 }, // Northwest
-    //     { row: 1,  col: 1  }, // Southeast
-    //     { row: -1, col: 1  }, // Northeast
-    //   ]
-    // },
-    // {
-    //   'enemyGiraffe' : [
-    //     { row: 1,  col: 0  }, // South
-    //     { row: -1, col: 0  }, // North
-    //     { row: 0,  col: -1 }, // West
-    //     { row: 0,  col: 1  }, // East
-    //   ]
-    // },
-    // {
-    // 'enemyHen' : [
-    //     { row: 1,  col: 0  }, // South
-    //     { row: -1, col: 0  }, // North
-    //     { row: 0,  col: -1 }, // West
-    //     { row: 0,  col: 1  }, // East
-    //     { row: 1,  col: -1 }, // Southwest
-    //     { row: 1,  col: 1  }, // Southeast
-    //   ]
-    // },
-    // {
-    //   'playerChick' : [{ row: -1, col: 0 }]   // North
-      
-    // },
-    // {
-    // 'playerLion' : [
-    //   { row: -1, col: 0  }, // North
-    //   { row: 1,  col: 0  }, // South
-    //   { row: 0,  col: -1 }, // West
-    //   { row: 0,  col: 1  }, // East
-    //   { row: -1, col: -1 }, // Northwest
-    //   { row: 1,  col: -1 }, // Southwest
-    //   { row: -1, col: 1  }, // Northeast
-    //   { row: 1,  col: 1  }, // Southeast
-    //   ]
-    // },
-    // {
-    // 'playerElephant' : [
-    //   { row: -1, col: -1 }, // Northwest
-    //   { row: 1,  col: -1 }, // Southwest
-    //   { row: 1,  col: 1  }, // Southeast
-    //   { row: -1, col: 1  }, // Northeast
-    // ]
-    // },
-    // {
-    // 'playerGiraffe' : [
-    //   { row: -1, col: 0  }, // North
-    //   { row: 1,  col: 0  }, // South
-    //   { row: 0,  col: -1 }, // West
-    //   { row: 0,  col: 1  }, // East
-    //   ]
-    // },
-    // {'playerHen' : [
-    //   { row: -1, col: 0 }, // North
-    //   { row: 1,  col: 0 }, // South
-    //   { row: 0,  col: -1}, // West
-    //   { row: 0,  col: 1 }, // East
-    //   { row: -1, col: -1}, // Northwest
-    //   { row: -1, col: 1 }, // Northeast 
-    //   ]
-    // }
-    
+ 
 
   /**************************
   *      HELPER METHODS     *
@@ -244,6 +87,7 @@ let forestLion = {
       automove: [-1, -1],
       active: false,
       isCaptured: false,
+      isUnderCheck: false,
       reachedOpp: false
 
     };
@@ -295,6 +139,7 @@ let forestLion = {
       location: [0, 1],
       automove: [1, 0],
       isCaptured: false,
+      isUnderCheck: false,
       reachedOpp: false
 
     };
@@ -330,12 +175,12 @@ let forestLion = {
       automove: [1, -1]
     };
 
-  let testBoard = [
-                   [skyGiraffe, skyLion, skyElephant],
-                   [null, skyChick, null],
-                   [null, forestChick, null],
-                   [forestElephant, forestLion, forestGiraffe]
-                  ];
+let initBoardState = [
+                  [skyGiraffe, skyLion, skyElephant],
+                  [null, skyChick, null],
+                  [null, forestChick, null],
+                  [forestElephant, forestLion, forestGiraffe]
+                ];
 
 let initialSkyStandState = [
                  null, null, null, null, null, null
@@ -344,6 +189,8 @@ let initialSkyStandState = [
 let initialForestStandState = [
                  null, null, null, null, null, null
                 ];
+
+
 function refreshPage(){ 
   setTimeout(location.reload.bind(location), 2500);; 
 }
@@ -352,13 +199,11 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      initial: testBoard,
+      initial: initBoardState,
       initSkyStand: initialSkyStandState,
       initForestStand: initialForestStandState,
       currentPlayer: 1, 
       moveInProgress: false,
-      movingPiece: null,
-      validMoves: null,
       captures:[],
       activated: false
     }
@@ -366,6 +211,7 @@ class App extends React.Component {
     this.hardCode = this.hardCode.bind(this);
     this.cycleWinChecker = this.cycleWinChecker.bind(this);
     this.immediateWin = this.immediateWin.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
 
@@ -391,7 +237,6 @@ class App extends React.Component {
             continue;
           } else if (boardState[i][j].isCaptured) {
             let loser = boardState[i][j].currentPlayer;
-            //console.log('winner', loser)
               if (loser === 1) {
                 return <div> Player 2 Wins!</div>
               } else {
@@ -439,54 +284,13 @@ class App extends React.Component {
     return true;  
   }
 
-  // handleMove(row, col) {
-  //   const {player, moveInProgress, initial, validMoves} = this.state;
-    
-  //   let target = initial[row][col];
-  //   console.log('move', target)
-  //   console.log('checkout', moveInProgress)
+  handleClick (e) {
+    e.preventDefault();
+    this.setState({moveInProgress: true})
+    console.log('firing')
+    alert(this.state.moveInProgress)
 
-  //   if (moveInProgress) {
-  //     console.log('check', moveInProgress)
-  //     if (!this.isValidMove(row, col, player)) {
-  //       console.log('inner', this.isValidMove(row, col, player))
-  //       return this.cancelMove();
-  //     }
-  //     else {
-  //       console.log('innermost', target);
-  //       return this.completeMove(row, col, target);
-  //     }
-  //   }
-
-  //   else {
-  //      // console.log('san', target);
-  //     if (!target) return;
-  //     if (target.owner !== this.state.currentPlayer) return this.cancelMove();
-      
-  //     for (var i = 0; i < target.moveDirections; i++) {
-  //       let x = target.moveDirections[i].row
-  //       let y = target.moveDirections[i].col
-
-  //       if (this.isValidMove(x, y)) {
-  //         validMoves.push [x, y];
-  //       }
-  //     }
-
-  //     if (!validMoves.length) {
-  //       return this.cancelMove(); // no valid moves were found...
-  //     }
-
-  //     else {
-  //       this.setState({moveInProgress: true});
-  //     console.log('fin', this.state);
-  //     this.setState({movingPiece: target});
-
-  //     }
-      
-
-  //   } 
-
-  // }
+  }
 
   hardCode (row, col) {
     const {currentPlayer, moveInProgress, initial, validMoves} = this.state;
@@ -509,7 +313,6 @@ class App extends React.Component {
       initial[x][y] = source;
       initial[row][col] = null;
       this.switchPlayer();
-      //console.log('outer confirm', this.state.currentPlayer);
     }
 
   }
@@ -544,7 +347,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Game status={this.state.initial} handleMove={this.hardCode} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
+        <Game status={this.state.initial} handleMove={this.hardCode} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
         {this.state.activated ? <div className="gamestatus"> GAME OVER </div> : null}
         {this.state.activated ? refreshPage() : null}
       </div>)

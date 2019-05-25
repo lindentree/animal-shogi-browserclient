@@ -8,12 +8,13 @@ export default class Board extends React.Component {
 
 
   renderSquare(i, j, id) {
-    //console.log('outer', this.state.squares[i])
+    console.log('outer', this.state.squares[i])
     return (
       <Square 
-        id= {id}
-        piece= {this.props.status[i][j]} 
+        id={id}
+        piece={this.props.status[i][j]} 
         handleMove={this.props.handleMove}
+        onClick={this.props.handleClick}
         row={i}
         col={j}
       />
