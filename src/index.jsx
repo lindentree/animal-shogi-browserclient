@@ -60,9 +60,8 @@ import GameStatus from './components/GameStatus.jsx';
     return found;
   }
 
-
-  
-let forestLion = {
+let newAllPieces = {
+  forestLion : {
     name: 'playerLion',
     owner: 1,
     position: [3, 1],
@@ -71,31 +70,28 @@ let forestLion = {
     isUnderCheck: false,
     reachedOpp: false
 
-    };
-  
-  let forestChick = {
+    },
+  forestChick : {
     name: 'playerChick',
     owner: 1,
     position: [2, 1],
-    reachedOpp: false
-  };
+    reachedOpp: false,
+    promoted: false
+  },
 
-  let forestGiraffe = {
+  forestGiraffe : {
     name: 'playerGiraffe',
     owner: 1,
-    moveDirections: [
-        { row: -1, col: 0  }, // North
-      ],
     position: [3, 2],
-    };
+  },
 
-  let forestElephant = {
+  forestElephant : {
     name: 'playerElephant',
     owner: 1,
     position: [3, 0],
-    };
+    },
 
-  let skyLion = {
+  skyLion : {
     name: 'enemyLion',
     owner: 2,   
     position: [0, 1],
@@ -103,31 +99,28 @@ let forestLion = {
     isUnderCheck: false,
     reachedOpp: false
 
-    };
+    },
 
-  let skyChick = {
+  skyChick : {
     name: 'enemyChick',
     owner: 2,
     position: [1, 1],
     reachedOpp: false
-    };
+    },
 
-  let skyGiraffe = {
+  skyGiraffe : {
     name: 'enemyGiraffe',
     owner: 2,
     position: [0, 0],
-    };
-
-  let skyElephant = {
+    },
+  skyElephant : {
     name: 'enemyElephant',
     owner: 2,
     position: [0, 2],
-    };
+    }
 
-
-
-
-let allPieces = [skyGiraffe, skyLion, skyElephant, skyChick, forestChick, forestElephant, forestLion, forestGiraffe]
+}
+  
 
 let initBoardState = [
                   [null, null, null],
@@ -156,7 +149,7 @@ class App extends React.Component {
       initial: initBoardState,
       initSkyStand: initialSkyStandState,
       initForestStand: initialForestStandState,
-      pieces: allPieces,
+      pieces: newAllPieces,
       currentPlayer: 1, 
       moveInProgress: false,
       captures:[],
@@ -225,7 +218,7 @@ class App extends React.Component {
 
 
   isValidMove(row, col) {
-    const { moveInProgress, initial, validMoves} = this.state;
+    const { moveInProgress, initial} = this.state;
     let target = initial;
     if (target === undefined) {
       return false;
@@ -244,11 +237,22 @@ class App extends React.Component {
 
   handleClick (e) {
     e.preventDefault();
+    let pieces = this.state.pieces;
+    let x = parseInt(e.target.getAttribute('x'))
+    let y = parseInt(e.target.getAttribute('y'))
+    let name = e.target.getAttribute('name')
+    let coordinates = [x, y]
+    let source;
+    let destination;
+    alert(name);
     let status = this.state.moveInProgress;
     this.setState({moveInProgress: !status})
-    console.log(e.target, 'firing')
-    console.log(e.target, 'test')
-    alert(this.state.moveInProgress)
+      if (status) {
+
+      }
+    
+   
+    //alert(this.state.moveInProgress)
 
   }
 
@@ -256,18 +260,19 @@ class App extends React.Component {
     let pieces = this.state.pieces;
     let board = this.state.initial.slice();
 
-    pieces.map(piece => {
-      //console.log(piece.location[0])
-      let x = piece.position[0];
-      console.log("inner testing", board)
-      let y = piece.position[1];
-      board[x][y] = piece;
-
-    })  
+    for (let key in newAllPieces) {
+      
+      let x = newAllPieces[key].position[0];
+      let y = newAllPieces[key].position[1];
+      board[x][y] = newAllPieces[key];
+    }
    
     this.setState({initial: board})
 
-     console.log("test", board)
+  }
+
+  movePiece (coordinates) {
+    let pieces = this.state.pieces;
 
   }
 

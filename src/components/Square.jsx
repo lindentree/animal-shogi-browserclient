@@ -20,7 +20,13 @@ function Square(props) {
 
     <div onClick={props.handleClick}>
       <button className={"square img" + props.id} >
-        <div className={"cell " + props.piece.name} xy={props.piece}></div>
+        <div 
+          className={"cell " + props.piece.name} 
+          name={props.piece.name} 
+          x={props.piece.position[0]} 
+          y={props.piece.position[1]}
+        >
+        </div>
       </button>
     </div>
   );
