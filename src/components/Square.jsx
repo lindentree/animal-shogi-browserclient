@@ -7,8 +7,7 @@ function Square(props) {
      return (
      
      <div onClick={props.handleClick}>
-      <button className={"square img" + props.id} >
-        <div className="cell"></div>
+      <button className={"square img" + props.id} x={props.row}   y={props.col}>
       </button>
     </div>
 
@@ -23,8 +22,8 @@ function Square(props) {
         <div 
           className={"cell " + props.piece.name} 
           name={props.piece.name} 
-          x={props.piece.position[0]} 
-          y={props.piece.position[1]}
+          x={props.row} 
+          y={props.col}
         >
         </div>
       </button>

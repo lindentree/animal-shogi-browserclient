@@ -12,8 +12,8 @@ export default class ForestPieceStand extends React.Component {
      return (
       <Square 
         handleClick={this.props.handleClick}
-        piece= {this.props.status[i]} 
-        id = {id}
+        piece={null}
+        id={id}
       />
     );
   }

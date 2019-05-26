@@ -8,7 +8,6 @@ export default class Board extends React.Component {
 
 
   renderSquare(i, j, id) {
-    
     return (
       <Square 
         id={id}
