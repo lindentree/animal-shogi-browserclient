@@ -169,6 +169,7 @@ class App extends React.Component {
     this.immediateWin = this.immediateWin.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.checkPiecePosition = this.checkPiecePosition.bind(this);
+    this.switchPlayer = this.switchPlayer.bind(this);
   }
 
 
@@ -221,7 +222,7 @@ class App extends React.Component {
 
   switchPlayer() {
     let currentPlayer = this.state.currentPlayer;
-    currentPlayer = (currentPlayer === 1) ? 2 : 1;
+    currentPlayer = (currentPlayer === 1) ? 0 : 1;
     this.setState({'currentPlayer': currentPlayer});
   }
 
@@ -232,40 +233,68 @@ class App extends React.Component {
 
   }
 
+  captureMethod () {
+
+  }
+
   handleClick (e) {
     e.preventDefault();
     let status = this.state.moveInProgress;
     let board = this.state.initial;
 
+    let forest = this.state.initForestStand.slice();
+    let sky = this.state.initSkyStand.slice();
+    let z = forest.indexOf(null);
+    let z2 = sky.indexOf(null);;
+
     let pieces = this.state.pieces;
-    let active = this.state.activePiece
+    let active = this.state.activePiece;
+    let captures = this.state.captures.slice();
     
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
-    console.log("outer", e.target)
     let coordinates = [x, y];
-    alert(coordinates)
+ 
     let name = e.target.getAttribute('name')//string or null
     
     
     if (name === null && !status) {
       console.log('test')
+      return;
     } else if (name !== null && !status) {
-      console.log('first')
        let currentPiece = pieces[name];
       
        this.setState({activePiece: currentPiece})
        this.setState({start: coordinates})
        console.log('active', currentPiece)
-       console.log('current pos', coordinates)
 
-    } else {
-      console.log('fire')
-      
+    } else if (status && name === null) {
       let x2 = this.state.start[0];
       let y2 = this.state.start[1];
-      console.log("active source", x, y)
+
       board[x][y] = active;
+      board[x2][y2] = null;
+      this.switchPlayer();
+
+    } else {
+      
+      board[x][y].isCaptured = true;
+
+      if (board[x][y].owner == 0) {
+        console.log('forest')
+        forest[z] = board[x][y];
+        this.setState({initForestStand:forest})
+      } else {
+        console.log('sky')
+        sky[z2] = board[x][y];
+        this.setState({initSkyStand:sky})
+      } 
+
+      let x2 = this.state.start[0];
+      let y2 = this.state.start[1];
+      
+      board[x][y] = active;
+      
       board[x2][y2] = null;
 
       this.setState({initial: board})
@@ -274,19 +303,14 @@ class App extends React.Component {
 
       this.setState({moveInProgress: !status})
       
-     
       this.setState({activePiece: null})
+      this.switchPlayer();
     
-    }
-   
+     }        
      this.setState({moveInProgress: !status})
-
-    
-    let source;
-    let destination;
-    //alert(name);
     
   }
+
 
   checkPiecePosition () {
     let pieces = this.state.pieces;
@@ -298,8 +322,11 @@ class App extends React.Component {
       let y = newAllPieces[key].position[1];
       board[x][y] = newAllPieces[key];
     }
+
    
-    this.setState({initial: board})
+
+  
+    this.setState({initial: board});
 
   }
 
@@ -308,57 +335,6 @@ class App extends React.Component {
 
   }
 
-  // hardCode (row, col) {
-  //   const {currentPlayer, moveInProgress, initial, validMoves} = this.state;
-  //   let source = initial[row][col];
-    
-  //   if (source.owner !== currentPlayer) {
-     
-  //     return;
-      
-  //   } else if (source !== null){
-  //     let x = row + source.automove[0];
-  //     let y = col + source.automove[1];
-  //     let dest = initial[x][y]
-  //     if (dest && dest.isCaptured !== undefined) {
-  //       dest.isCaptured = true;
-  //       this.immediateWin(dest.isCaptured);
-  //     }
-
-      
-  //     initial[x][y] = source;
-  //     initial[row][col] = null;
-  //     this.switchPlayer();
-  //   }
-
-  // }
- 
-  // completeMove(row, col, movingPiece = this.state.movingPiece) {
-    
-  //   const {player, moveInProgress, initial, validMoves} = this.state;
-
-  //   let source = initial[movingPiece.location[0]][movingPiece.location[1]];
-  //   console.log('complete', source)
-  //   initial[movingPiece.location[0]][movingPiece.location[1]] = null;
-  //   let destination = initial[row][col];
-  //   console.log('dest', destination)
-  //   if (destination !== null) {
-  //     this.state.captures.push(destination);
-  //   }
-  //   console.log('dest', movingPiece)
-  //   destination = source;
-
-  //   this.setState({moveInProgress: false});
-  //   this.setState({movingPiece: null});
-  //   this.setState({validMoves: null});
-  //   this.switchPlayer();
-  // }
-
-  // cancelMove() {
-  //   this.setState({moveInProgress: false});
-  //   this.setState({movingPiece: null});
-  //   this.setState({validMoves: null});
-  // }
  //{this.state.activated ? setTimeout(refreshPage, 3000) : null}
   render () {
     return (
