@@ -224,6 +224,7 @@ class App extends React.Component {
     let currentPlayer = this.state.currentPlayer;
     currentPlayer = (currentPlayer === 1) ? 0 : 1;
     this.setState({'currentPlayer': currentPlayer});
+    alert(this.state.currentPlayer)
   }
 
 
@@ -248,6 +249,7 @@ class App extends React.Component {
     let z2 = sky.indexOf(null);;
 
     let pieces = this.state.pieces;
+
     let active = this.state.activePiece;
     let captures = this.state.captures.slice();
     
@@ -256,12 +258,20 @@ class App extends React.Component {
     let coordinates = [x, y];
  
     let name = e.target.getAttribute('name')//string or null
+    let turn = this.state.currentPlayer;
+    
     
     
     if (name === null && !status) {
       console.log('test')
       return;
     } else if (name !== null && !status) {
+        let player = pieces[name].owner;
+        if (turn !== player) {
+          alert("Not this side's turn!");
+          return;
+        }
+
        let currentPiece = pieces[name];
       
        this.setState({activePiece: currentPiece})
@@ -269,6 +279,7 @@ class App extends React.Component {
        console.log('active', currentPiece)
 
     } else if (status && name === null) {
+
       let x2 = this.state.start[0];
       let y2 = this.state.start[1];
 
