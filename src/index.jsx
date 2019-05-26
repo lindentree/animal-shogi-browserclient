@@ -73,6 +73,8 @@ let newAllPieces = {
     },
   playerChick : {
     name: 'playerChick',
+    alt: 'enemyChick',
+    promote: 'playerChick',
     owner: 1,
     position: [2, 1],
     isCaptured: false,
@@ -82,6 +84,7 @@ let newAllPieces = {
 
   playerGiraffe : {
     name: 'playerGiraffe',
+    alt: 'enemyGiraffe',
     owner: 1,
     position: [3, 2],
     isCaptured: false,
@@ -276,27 +279,35 @@ class App extends React.Component {
       
        this.setState({activePiece: currentPiece})
        this.setState({start: coordinates})
-       console.log('active', currentPiece)
+       console.log('active', coordinates)
 
     } else if (status && name === null) {
 
       let x2 = this.state.start[0];
       let y2 = this.state.start[1];
-
+      console.log('san', x2, y2, typeof x2, typeof y2)
       board[x][y] = active;
       board[x2][y2] = null;
       this.switchPlayer();
 
     } else {
+
+      if (board[x][y].owner === turn) {
+        alert("Can't capture own piece");
+        this.setState({moveInProgress: !status});
+        return;
+      }
       
       board[x][y].isCaptured = true;
 
       if (board[x][y].owner == 0) {
+        board[x][y].owner = 1;
         console.log('forest')
         forest[z] = board[x][y];
         this.setState({initForestStand:forest})
       } else {
         console.log('sky')
+        board[x][y].owner = 0;
         sky[z2] = board[x][y];
         this.setState({initSkyStand:sky})
       } 
