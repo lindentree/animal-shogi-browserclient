@@ -1,7 +1,6 @@
 import React from 'react';
 import Square from './Square.jsx';
 
-let otherTest = {piece: "playerChick"}
 
 export default class ForestPieceStand extends React.PureComponent {
   constructor(props) {
@@ -13,13 +12,9 @@ export default class ForestPieceStand extends React.PureComponent {
       <Square 
         handleClick={this.props.handleClick}
         piece={this.props.status[i]}
-        id={id}
+        id= {id}
       />
     );
-  }
-
-  dropPiece(i) {
-
   }
 
   render() {

@@ -156,14 +156,14 @@ class App extends React.Component {
     }
 
     this.handleClick = this.handleClick.bind(this);
-    this.checkPiecePosition = this.checkPiecePosition.bind(this);
+    this.startPiecePosition = this.startPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
   }
 
   componentDidMount() {
 
-    this.checkPiecePosition()
+    this.startPiecePosition()
 
     // axios.get('/users')
     //  .then(function (response) {
@@ -206,7 +206,7 @@ class App extends React.Component {
   handleClick (e) {
     e.preventDefault();
     let moving = this.state.moveInProgress;
-    let board = this.state.initial.slice();
+    let board = JSON.parse(JSON.stringify(this.state.initial));
 
     let forest = this.state.initForestStand.slice();
     let sky = this.state.initSkyStand.slice();
@@ -247,7 +247,7 @@ class App extends React.Component {
         board[x2][y2] = null;
         this.setState({initial: board})
         this.switchPlayer();
-        //this.forceUpdate();
+        this.forceUpdate();
        
       } else {
         alert("Invalid move!");
@@ -295,36 +295,36 @@ class App extends React.Component {
       if (valid) {
         board[x][y].isCaptured = true;
 
-        if (board[x][y].owner == 0) {
+          if (board[x][y].owner == 0) {
 
-          board[x][y].owner = 1;
-          forest[z] = board[x][y];
-          this.setState({initForestStand:forest})
-        } else {
+            board[x][y].owner = 1;
+            forest[z] = board[x][y];
+            this.setState({initForestStand:forest})
+          } else {
 
-          board[x][y].owner = 0;
-          sky[z2] = board[x][y];
-          this.setState({initSkyStand:sky})
-        } 
+            board[x][y].owner = 0;
+            sky[z2] = board[x][y];
+            this.setState({initSkyStand:sky})
+          } 
       
         board[x][y] = active;
         board[x2][y2] = null;
 
-        this.setState({initial: board, moveInProgress: !moving, activePiece: null})
+        this.setState({initial: board, moveInProgress: !moving, activePiece: null })
         this.switchPlayer();
-        //this.forceUpdate();
+        this.forceUpdate();
 
       } 
     
      } 
 
-    this.setState({moveInProgress: !moving})
-    //this.forceUpdate();
+    this.setState({moveInProgress: !moving});
+    this.forceUpdate();
     
   }
 
-  checkPiecePosition () {
-    let board = this.state.initial.slice();
+  startPiecePosition () {
+    let board = JSON.parse(JSON.stringify(this.state.initial));
 
     for (let key in pieces) {
       

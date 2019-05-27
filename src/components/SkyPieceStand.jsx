@@ -1,8 +1,6 @@
 import React from 'react';
 import Square from './Square.jsx';
 
-let test = {piece: "enemyChick"}
-
 export default class SkyPieceStand extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -16,10 +14,6 @@ export default class SkyPieceStand extends React.PureComponent {
         id= {id}
       />
     );
-  }
-
-  dropPiece(i) {
-
   }
 
   render() {

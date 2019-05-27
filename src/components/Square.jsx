@@ -15,27 +15,31 @@ function Square(props) {
      return (
      
      <div onClick={props.handleClick} >
-      <button className={"square img" + props.id} x={props.row} y={props.col}>
+      <button 
+        className={"square img" + props.id} 
+        x={props.row} 
+        y={props.col}>
       </button>
     </div>
 
      )
-   }
+   } else {
+     return (
 
-  return (
-
-    <div onClick={props.handleClick} >
-      <button className={"square img" + props.id} >
-        <div 
-          className={"cell " + props.piece.name} 
-          name={props.piece.name} 
-          x={props.row} 
-          y={props.col}
-        >
+      <div onClick={props.handleClick} >
+        <button className={"square img" + props.id} >
+          <div 
+            className={props.piece.name} 
+            name={props.piece.name} 
+            x={props.row} 
+            y={props.col}
+         >
         </div>
       </button>
     </div>
   );
+
+   }
 }
 
 export default Square;

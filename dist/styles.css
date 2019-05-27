@@ -54,7 +54,7 @@ h1 {
   padding-bottom: 30%; 
   background-position: center center;
   background-repeat: no-repeat;
-  border: 1px solid grey !important;
+  border: 1px solid grey;
   background-size: cover;
   cursor: pointer;
 }

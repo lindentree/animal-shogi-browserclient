@@ -12,7 +12,7 @@ export default class Board extends React.PureComponent {
     return (
       <Square 
         id={id}
-        key={id}
+        key={i + '0' + j}
         piece={this.props.status[i][j]} 
         handleClick={this.props.handleClick}
         row={i}
@@ -24,7 +24,7 @@ export default class Board extends React.PureComponent {
   render() {
     
     return (
-      <div>
+      <React.Fragment>
       <SkyPieceStand status={this.props.skystand} handleClick={this.props.handleClick}/>
       <div className="board" id="one">
         <div className="sky-row">
@@ -49,7 +49,7 @@ export default class Board extends React.PureComponent {
         </div>
       </div>
       <ForestPieceStand status={this.props.foreststand} handleClick={this.props.handleClick}/> 
-      </div>
+      </React.Fragment>
     );
   }
 }
