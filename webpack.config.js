@@ -3,6 +3,7 @@ var SRC_DIR = path.join(__dirname, '/src');
 var DIST_DIR = path.join(__dirname, '/dist');
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
   entry: `${SRC_DIR}/index.jsx`,
@@ -55,5 +56,8 @@ module.exports = {
         ],
       },
     ]
+  },
+  optimization: {
+    minimizer: [new UglifyJsPlugin()],
   }
 };

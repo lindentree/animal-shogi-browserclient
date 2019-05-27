@@ -14,7 +14,6 @@ h1 {
 }
 
 .board {
-  height: 90%;
   width: 90%;
   padding-top: 10px;
   clear: both;
@@ -85,7 +84,6 @@ h1 {
   position: relative;
   float: right;
   width: 30%;
-
 }
 
 #forestStand {
@@ -99,13 +97,11 @@ h1 {
 }
 
 .img1 {
-  background-image:url('./assets/tiles/tile1.png'); 
-    
+  background-image:url('./assets/tiles/tile1.png');   
 }
 
 .img2 {
-  background-image:url('./assets/tiles/tile2.png'); 
-    
+  background-image:url('./assets/tiles/tile2.png');  
 }
 
 .img3 { 
@@ -118,7 +114,6 @@ h1 {
 
 .img5 {
   background-image:url('./assets/tiles/tile5.png'); 
-    
 }
 
 .img6 {
@@ -174,7 +169,6 @@ h1 {
 }
 
 .playerElephant { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -186,7 +180,6 @@ h1 {
 }
 
 .playerChick { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -198,7 +191,6 @@ h1 {
 }
 
 .playerGiraffe { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -210,7 +202,6 @@ h1 {
 }
 
 .playerHen { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -222,7 +213,6 @@ h1 {
 }
 
 .playerLion { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -234,7 +224,6 @@ h1 {
 }
 
 .enemyElephant { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -246,7 +235,6 @@ h1 {
 }
 
 .enemyChick { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -258,7 +246,6 @@ h1 {
 }
 
 .enemyGiraffe { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -270,7 +257,6 @@ h1 {
 }
 
 .enemyHen { 
-    height: 85%;
     width: 85%;
     left: 0px;
     right: 0px;
@@ -281,8 +267,7 @@ h1 {
     position: absolute;
 }
 
-.enemyLion { 
-    height: 85%;
+.enemyLion {  
     width: 85%;
     left: 0px;
     right: 0px;
