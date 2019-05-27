@@ -182,7 +182,6 @@ let newAllPieces = {
     }
 
 }
-  
 
 let initBoardState = [
                   [null, null, null],
@@ -305,14 +304,14 @@ class App extends React.Component {
   handleClick (e) {
     e.preventDefault();
     let status = this.state.moveInProgress;
-    let board = this.state.initial;
+    let board = this.state.initial.slice();
 
     let forest = this.state.initForestStand.slice();
     let sky = this.state.initSkyStand.slice();
     let z = forest.indexOf(null);
     let z2 = sky.indexOf(null);;
 
-    let pieces = this.state.pieces;
+    let pieces = newAllPieces;
 
     let active = this.state.activePiece;
     
@@ -322,7 +321,6 @@ class App extends React.Component {
  
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
-    
     
     if (name === null && !status) {
       return;
@@ -334,9 +332,7 @@ class App extends React.Component {
         }
 
        let currentPiece = pieces[name];
-      
-       this.setState({activePiece: currentPiece})
-       this.setState({start: coordinates})
+       this.setState({activePiece: currentPiece, start: coordinates});
 
     } else if (status && name === null) {
       
@@ -350,7 +346,10 @@ class App extends React.Component {
       if (valid) {
         board[x][y] = active;
         board[x2][y2] = null;
+        this.setState({initial: board})
+        //this.forceUpdate();
         this.switchPlayer();
+       
       } else {
         alert("Invalid move!");
         this.setState({moveInProgress: !status})
@@ -365,10 +364,17 @@ class App extends React.Component {
       let start = this.state.start;
       let valid = this.isValidMove(start, piece.moves, coordinates)
 
+      if (!valid) {
+        alert('Invalid move');
+        this.setState({moveInProgress: !status});
+        return;
+      }
+
       if (board[x][y].owner === turn) {
         alert("Can't capture own piece");
         this.setState({moveInProgress: !status});
         return;
+  
       }
 
       if (name == 'playerLion') {
@@ -383,7 +389,6 @@ class App extends React.Component {
       }  
 
       if (name == 'enemyLion') {
-        console.log('firing', name)
         board[x][y] = active;
         board[x2][y2] = null;
         
@@ -398,10 +403,12 @@ class App extends React.Component {
         piece.isCaptured = true;
 
         if (board[x][y].owner == 0) {
+
           board[x][y].owner = 1;
           forest[z] = board[x][y];
           this.setState({initForestStand:forest})
         } else {
+
           board[x][y].owner = 0;
           sky[z2] = board[x][y];
           this.setState({initSkyStand:sky})
@@ -410,27 +417,20 @@ class App extends React.Component {
         board[x][y] = active;
         board[x2][y2] = null;
 
-        this.setState({initial: board})
-        this.setState({moveInProgress: !status})
-        this.setState({activePiece: null})
+        this.setState({initial: board, moveInProgress: !status, activePiece: null})
+        //this.forceUpdate();
         this.switchPlayer();
 
-      } else {
-          alert('Invalid move');
-          this.setState({moveInProgress: !status})
-          return;
-      }
-      
-      
+      } 
     
-     }        
+     } 
+
     this.setState({moveInProgress: !status})
+    //this.forceUpdate();
     
   }
 
-
   checkPiecePosition () {
-    let pieces = this.state.pieces;
     let board = this.state.initial.slice();
 
     for (let key in newAllPieces) {
