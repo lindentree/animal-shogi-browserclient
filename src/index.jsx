@@ -60,7 +60,6 @@ import GameStatus from './components/GameStatus.jsx';
     return found;
   }
 
-
 let gametext;
 
 let newAllPieces = {
@@ -285,7 +284,6 @@ class App extends React.Component {
 
 
   isValidMove(pos, moves, dest) {
-    console.log(arguments)
 
     let x = dest[0] - pos[0];
     let y = dest[1] - pos[1]; 
@@ -327,7 +325,6 @@ class App extends React.Component {
     
     
     if (name === null && !status) {
-      console.log('test')
       return;
     } else if (name !== null && !status) {
         let player = pieces[name].owner;
@@ -367,7 +364,6 @@ class App extends React.Component {
       let piece = board[x2][y2];
       let start = this.state.start;
       let valid = this.isValidMove(start, piece.moves, coordinates)
-      console.log('testing', name)
 
       if (board[x][y].owner === turn) {
         alert("Can't capture own piece");
@@ -403,39 +399,32 @@ class App extends React.Component {
 
         if (board[x][y].owner == 0) {
           board[x][y].owner = 1;
-          console.log('forest')
           forest[z] = board[x][y];
           this.setState({initForestStand:forest})
         } else {
-          console.log('sky')
           board[x][y].owner = 0;
           sky[z2] = board[x][y];
           this.setState({initSkyStand:sky})
         } 
       
         board[x][y] = active;
-      
         board[x2][y2] = null;
 
         this.setState({initial: board})
-        console.log(active,'moving piece')
-        console.log(this.state,'state')
-
         this.setState({moveInProgress: !status})
-      
         this.setState({activePiece: null})
         this.switchPlayer();
 
       } else {
-        alert('Invalid move');
-        this.setState({moveInProgress: !status})
-        return;
+          alert('Invalid move');
+          this.setState({moveInProgress: !status})
+          return;
       }
       
       
     
      }        
-     this.setState({moveInProgress: !status})
+    this.setState({moveInProgress: !status})
     
   }
 

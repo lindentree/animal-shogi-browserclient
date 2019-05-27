@@ -6,7 +6,6 @@ export default class Board extends React.Component {
     super(props);
   }
 
-
   renderSquare(i, j, id) {
     return (
       <Square 
