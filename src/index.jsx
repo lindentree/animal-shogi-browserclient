@@ -60,15 +60,38 @@ import GameStatus from './components/GameStatus.jsx';
     return found;
   }
 
+
+let md = {
+   1: [-1, 0],//North
+   2: [1, 0], //South
+   3: [0, -1],//West
+   4: [0, 1],//East
+   5: [-1, -1],//Northwest
+   6: [1, -1],//Southwest
+   7: [-1, 1],//Northeast
+   8: [1, 1]//Southeast
+
+}
+
 let newAllPieces = {
-  playerLion : {
+  playerLion: {
     name: 'playerLion',
     owner: 1,
     position: [3, 1],
     active: false,
     isCaptured: false,
     isUnderCheck: false,
-    reachedOpp: false
+    reachedOpp: false,
+    moves: [
+      { row: 1,  col: 0  }, // South
+      { row: -1, col: 0  }, // North
+      { row: 0,  col: -1 }, // East
+      { row: 0,  col: 1  }, // West
+      { row: 1,  col: -1 }, // Southwest
+      { row: -1, col: -1 }, // Northwest
+      { row: 1,  col: 1  }, // Southeast
+      { row: -1, col: 1  }, // Northeast
+    ]
 
     },
   playerChick : {
@@ -79,7 +102,10 @@ let newAllPieces = {
     position: [2, 1],
     isCaptured: false,
     reachedOpp: false,
-    promoted: false
+    promoted: false,
+    moves: [
+      { row: -1, col: 0 }   // North
+    ]
   },
 
   playerGiraffe : {
@@ -88,6 +114,12 @@ let newAllPieces = {
     owner: 1,
     position: [3, 2],
     isCaptured: false,
+    moves: [
+      { row: -1, col: 0  }, // North
+      { row: 1,  col: 0  }, // South
+      { row: 0,  col: -1 }, // West
+      { row: 0,  col: 1  }, // East
+    ]
   },
 
   playerElephant : {
@@ -95,6 +127,12 @@ let newAllPieces = {
     owner: 1,
     position: [3, 0],
     isCaptured: false,
+    moves: [
+      { row: -1, col: -1 }, // Northwest
+      { row: 1,  col: -1 }, // Southwest
+      { row: 1,  col: 1  }, // Southeast
+      { row: -1, col: 1  }, // Northeast
+    ]
     },
 
   enemyLion : {
@@ -103,7 +141,17 @@ let newAllPieces = {
     position: [0, 1],
     isCaptured: false,
     isUnderCheck: false,
-    reachedOpp: false
+    reachedOpp: false,
+    moves: [
+      { row: 1,  col: 0  }, // South
+      { row: -1, col: 0  }, // North
+      { row: 0,  col: -1 }, // East
+      { row: 0,  col: 1  }, // West
+      { row: 1,  col: -1 }, // Southwest
+      { row: -1, col: -1 }, // Northwest
+      { row: 1,  col: 1  }, // Southeast
+      { row: -1, col: 1  }, // Northeast
+    ]
 
     },
 
@@ -112,7 +160,10 @@ let newAllPieces = {
     owner: 0,
     position: [1, 1],
     isCaptured: false,
-    reachedOpp: false
+    reachedOpp: false,
+    moves: [
+      { row: 1, col: 0 }  // South
+    ]
     },
 
   enemyGiraffe : {
@@ -120,12 +171,25 @@ let newAllPieces = {
     owner: 0,
     isCaptured: false,
     position: [0, 0],
+    moves: [
+      { row: 1,  col: 0  }, // South
+      { row: -1, col: 0  }, // North
+      { row: 0,  col: -1 }, // West
+      { row: 0,  col: 1  }, // East
+    ]
     },
   enemyElephant : {
     name: 'enemyElephant',
+    alt: 'playerElephant',
     owner: 0,
     isCaptured: false,
     position: [0, 2],
+    moves: [
+      { row: 1,  col: -1 }, // Southwest
+      { row: -1, col: -1 }, // Northwest
+      { row: 1,  col: 1  }, // Southeast
+      { row: -1, col: 1  }, // Northeast
+    ]
     }
 
 }
@@ -173,6 +237,7 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.checkPiecePosition = this.checkPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
+    this.isValidMove = this.isValidMove.bind(this);
   }
 
 
@@ -231,9 +296,19 @@ class App extends React.Component {
   }
 
 
-  isValidMove(row, col) {
-    let board = this.state.initial;
+  isValidMove(pos, moves, dest) {
+    console.log(arguments)
 
+    let x = dest[0] - pos[0];
+    let y = dest[1] - pos[1]; 
+
+    for (let i = 0; i < moves.length; i += 1) {
+      if (moves[i].row == x && moves[i].col == y ) {
+        return true;
+      }
+    }    
+
+    return false;
 
   }
 
@@ -279,16 +354,30 @@ class App extends React.Component {
       
        this.setState({activePiece: currentPiece})
        this.setState({start: coordinates})
-       console.log('active', coordinates)
 
     } else if (status && name === null) {
+      
 
       let x2 = this.state.start[0];
       let y2 = this.state.start[1];
-      console.log('san', x2, y2, typeof x2, typeof y2)
-      board[x][y] = active;
-      board[x2][y2] = null;
-      this.switchPlayer();
+      let piece = board[x2][y2];
+      let start = this.state.start;
+      console.log('current', piece)
+      console.log('start', start)
+      console.log('dest', coordinates)
+
+      let valid = this.isValidMove(start, piece.moves, coordinates)
+
+      if (valid) {
+        board[x][y] = active;
+        board[x2][y2] = null;
+        this.switchPlayer();
+      } else {
+        alert("Invalid move!");
+        return;
+      }
+
+      
 
     } else {
 
@@ -297,36 +386,50 @@ class App extends React.Component {
         this.setState({moveInProgress: !status});
         return;
       }
-      
-      board[x][y].isCaptured = true;
-
-      if (board[x][y].owner == 0) {
-        board[x][y].owner = 1;
-        console.log('forest')
-        forest[z] = board[x][y];
-        this.setState({initForestStand:forest})
-      } else {
-        console.log('sky')
-        board[x][y].owner = 0;
-        sky[z2] = board[x][y];
-        this.setState({initSkyStand:sky})
-      } 
 
       let x2 = this.state.start[0];
       let y2 = this.state.start[1];
-      
-      board[x][y] = active;
-      
-      board[x2][y2] = null;
+      let piece = board[x2][y2];
+      let start = this.state.start;
+      let valid = this.isValidMove(start, piece.moves, coordinates)
 
-      this.setState({initial: board})
-      console.log(active,'moving piece')
-      console.log(this.state,'state')
+      if (valid) {
+        piece.isCaptured = true;
 
-      this.setState({moveInProgress: !status})
+        if (board[x][y].owner == 0) {
+          board[x][y].owner = 1;
+          console.log('forest')
+          forest[z] = board[x][y];
+          this.setState({initForestStand:forest})
+        } else {
+          console.log('sky')
+          board[x][y].owner = 0;
+          sky[z2] = board[x][y];
+          this.setState({initSkyStand:sky})
+        } 
+
+        let x2 = this.state.start[0];
+        let y2 = this.state.start[1];
       
-      this.setState({activePiece: null})
-      this.switchPlayer();
+        board[x][y] = active;
+      
+        board[x2][y2] = null;
+
+        this.setState({initial: board})
+        console.log(active,'moving piece')
+        console.log(this.state,'state')
+
+        this.setState({moveInProgress: !status})
+      
+        this.setState({activePiece: null})
+        this.switchPlayer();
+
+      } else {
+        alert('Invalid move');
+        return;
+      }
+      
+      
     
      }        
      this.setState({moveInProgress: !status})
