@@ -1,5 +1,7 @@
 import React from 'react';
 import Square from './Square.jsx';
+import SkyPieceStand from './SkyPieceStand.jsx';
+import ForestPieceStand from './ForestPieceStand.jsx';
 
 export default class Board extends React.Component {
   constructor(props) {
@@ -22,6 +24,8 @@ export default class Board extends React.Component {
   render() {
     
     return (
+      <div>
+      <SkyPieceStand status={this.props.skystand} handleClick={this.props.handleClick}/>
       <div className="board" id="one">
         <div className="sky-row">
           {this.renderSquare(0, 0, 1)}
@@ -43,6 +47,8 @@ export default class Board extends React.Component {
           {this.renderSquare(3, 1, 11)}
           {this.renderSquare(3, 2, 12)}
         </div>
+      </div>
+      <ForestPieceStand status={this.props.foreststand} handleClick={this.props.handleClick}/> 
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 //import axios from 'axios';
-import Game from './components/Game.jsx';
+import Board from './components/Board.jsx';
 import GameStatus from './components/GameStatus.jsx';
 
 let gametext;
@@ -353,7 +353,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Game status={this.state.initial} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
+        <Board status={this.state.initial} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
         {this.state.activated ? <div className="gamestatus"> {gametext} </div> : null}
         {this.state.activated ? refreshPage() : null}
       </div>)
