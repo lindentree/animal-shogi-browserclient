@@ -4,62 +4,6 @@ import ReactDOM from 'react-dom';
 import Game from './components/Game.jsx';
 import GameStatus from './components/GameStatus.jsx';
 
-   
-  function getRandomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
-  
-  
-  function getCellContents(row, col) {
-    return _board[row][col];
-  }
-  /**
-   * Appends text to the debug panel.
-   * @param {string} message The message to add to debug panel.
-   * @return {undefined}
-  */
- function updatePlayerInfo(props) {
-   return <GameStatus text={props} />
- }
-
-  /**
-   * Determines location of a piece.
-   * @param {string} piece The name of the piece to locate. 
-   * @return {object} position The Row/Col position of piece.
-  */
-  function getPosition(piece) {
-    var position = {'row': 0, 'col': 0};
-    for(var row = 0; row < 4; row++) {
-      for(var col = 0; col < 3; col++) {
-        if(_board[row][col] === piece) {
-          position.row = row;
-          position.col = col;
-        }
-      }
-    }
-
-    return position; 
-  }
-
-  /**
-   * Determines if a piece is on the board.
-   * @param {object} board The configuration to test.
-   * @param {string} piece The piece to search for.
-   * @returns {boolean} found Whether the piece was found.
-  */
-  function isPieceOnBoard(board, piece) {
-    var found = false;
-    for(var row = 0; row < 4; row++) {
-      for(var col = 0; col < 3; col++) {
-        if(board[row][col] === piece) {
-          found = true;
-        }
-      }
-    }
-
-    return found;
-  }
-
 let gametext;
 
 let newAllPieces = {
@@ -215,12 +159,9 @@ class App extends React.Component {
       moveInProgress: false,
       activePiece: null,
       start:[],
-      end:[],
       activated: false
     }
 
-    this.cycleWinChecker = this.cycleWinChecker.bind(this);
-    this.immediateWin = this.immediateWin.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.checkPiecePosition = this.checkPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
@@ -245,42 +186,11 @@ class App extends React.Component {
     return <GameStatus text={text} />
   }
 
-  cycleWinChecker() {
-    let boardState = this.state.initial;
-      for (var i = 0; i < boardState.length; i++) {
-        for (var j = 0; j < boardState[0].length; j++) {
-          if (boardState[i][j] === null || boardState[i][j].isCaptured === undefined) {
-            continue;
-          } else if (boardState[i][j].isCaptured) {
-            let loser = boardState[i][j].currentPlayer;
-              if (loser === 1) {
-                return <div> Player 2 Wins!</div>
-              } else {
-                return <div> Player 1 Wins!</div>
-              }
-            } 
-        }
-      }
-
-    return;
-  }
-
-  immediateWin (flag) {
-    if (flag) {
-      //console.log('GAME OVER')
-     this.setState({
-      activated: true
-    });
-    }
-
-  }
-
   switchPlayer() {
     let currentPlayer = this.state.currentPlayer;
     currentPlayer = (currentPlayer === 1) ? 0 : 1;
     this.setState({'currentPlayer': currentPlayer});
   }
-
 
   isValidMove(pos, moves, dest) {
 
@@ -347,8 +257,8 @@ class App extends React.Component {
         board[x][y] = active;
         board[x2][y2] = null;
         this.setState({initial: board})
-        //this.forceUpdate();
         this.switchPlayer();
+        //this.forceUpdate();
        
       } else {
         alert("Invalid move!");
@@ -418,8 +328,8 @@ class App extends React.Component {
         board[x2][y2] = null;
 
         this.setState({initial: board, moveInProgress: !status, activePiece: null})
-        //this.forceUpdate();
         this.switchPlayer();
+        //this.forceUpdate();
 
       } 
     

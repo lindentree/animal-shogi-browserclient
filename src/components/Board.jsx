@@ -10,6 +10,7 @@ export default class Board extends React.Component {
     return (
       <Square 
         id={id}
+        key={id}
         piece={this.props.status[i][j]} 
         handleClick={this.props.handleClick}
         row={i}
