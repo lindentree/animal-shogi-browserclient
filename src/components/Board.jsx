@@ -3,7 +3,7 @@ import Square from './Square.jsx';
 import SkyPieceStand from './SkyPieceStand.jsx';
 import ForestPieceStand from './ForestPieceStand.jsx';
 
-export default class Board extends React.Component {
+export default class Board extends React.PureComponent {
   constructor(props) {
     super(props);
   }

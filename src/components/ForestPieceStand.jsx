@@ -3,7 +3,7 @@ import Square from './Square.jsx';
 
 let otherTest = {piece: "playerChick"}
 
-export default class ForestPieceStand extends React.Component {
+export default class ForestPieceStand extends React.PureComponent {
   constructor(props) {
     super(props);
   }
