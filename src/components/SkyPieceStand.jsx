@@ -23,10 +23,7 @@ export default class SkyPieceStand extends React.Component {
   }
 
   render() {
-
     return (
-      <div>
-  
         <div id="skyStand">
           {this.renderSquare(0, 13)}
           {this.renderSquare(1, 14)}
@@ -35,7 +32,6 @@ export default class SkyPieceStand extends React.Component {
           {this.renderSquare(4, 17)}
           {this.renderSquare(5, 18)}
         </div>
-      </div>
     );
   }
 }

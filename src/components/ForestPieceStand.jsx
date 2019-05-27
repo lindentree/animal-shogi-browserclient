@@ -25,8 +25,6 @@ export default class ForestPieceStand extends React.Component {
   render() {
 
     return (
-      <div>
-  
         <div id="forestStand">
           {this.renderSquare(0, 13)}
           {this.renderSquare(1, 14)}
@@ -34,8 +32,7 @@ export default class ForestPieceStand extends React.Component {
           {this.renderSquare(3, 16)}
           {this.renderSquare(4, 17)}
           {this.renderSquare(5, 18)}
-        </div>
-      </div>
+        </div>      
     );
   }
 }

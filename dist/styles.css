@@ -1,5 +1,4 @@
 
-
 body {
   background-image: url('./assets/cloud forest.jpg');
   background-size: fill;
@@ -15,29 +14,22 @@ h1 {
   width: auto;
 }
 
-.game-board {
-  max-width: 900px
-  max-height: 500px;
-  height: 85%;
-  width: 85%;
-  clear: both;
-  margin: 0 auto;
-  padding-bottom: 2%;
+.shell {
 }
 
 .board {
-  float: left;
-  height: 100%;
-  width: 100%;
+  height: 90%;
+  width: 90%;
   padding-top: 10px;
-  margin: auto;
+  clear: both;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 #skyStand {
     position: relative;
     float: right;
-    width: 25%;
-    padding-top: 0px;
+    width: 30%;
     margin: auto;
 }
 
@@ -53,7 +45,7 @@ h1 {
 #forestStand {
     position: relative;
     float: right;
-    width: 25%;
+    width: 30%;
     margin-top: 10px;
 }
 
@@ -69,25 +61,41 @@ h1 {
   cursor: pointer;
 }
 
+.gamestatus {
+  color: #E75480;
+  font-size: 250%;
+}
+
 @media (min-width: 801px) {
 
  h1 {
-  font-size: 400%;
-  color: purple;
+  font-size: 200%;
+  color: red;
   font-family: cursive, geneva;
   text-align: center;
   margin: auto;
   width: auto;
 } 
-  
-.game-board {
-  margin-top: -25%;
+
+#one {
   position: relative;
-  height: 35%;
+  clear: left;
   width: 35%;
+}
+
+#skyStand {
+  position: relative;
+  float: right;
+  width: 30%;
+
+}
+
+#forestStand {
+  position: relative;
+  float: right;
   clear: both;
-  margin: 0 auto;
-  padding-bottom: 2%;
+  width: 30%;
+  margin-top: -20%;
 }
   
 }
@@ -295,10 +303,4 @@ h1 {
     margin:auto;
     content:url('./assets/pieces/sky/lion.png');
     position: absolute;
-}
-
-.gamestatus {
-  color: #E75480;
-  font-size: 250%;
-
 }
