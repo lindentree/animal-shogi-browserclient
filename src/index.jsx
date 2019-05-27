@@ -6,7 +6,7 @@ import GameStatus from './components/GameStatus.jsx';
 
 let gametext;
 
-let newAllPieces = {
+let pieces = {
   playerLion: {
     name: 'playerLion',
     owner: 1,
@@ -127,22 +127,6 @@ let newAllPieces = {
 
 }
 
-let initBoardState = [
-                  [null, null, null],
-                  [null, null, null],
-                  [null, null, null],
-                  [null, null, null]
-                ];
-
-let initialSkyStandState = [
-                 null, null, null, null, null, null
-                ];
-
-let initialForestStandState = [
-                 null, null, null, null, null, null
-                ];
-
-
 function refreshPage(){ 
   setTimeout(location.reload.bind(location), 2500);; 
 }
@@ -151,10 +135,19 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      initial: initBoardState,
-      initSkyStand: initialSkyStandState,
-      initForestStand: initialForestStandState,
-      pieces: newAllPieces,
+      initial: [
+                  [null, null, null],
+                  [null, null, null],
+                  [null, null, null],
+                  [null, null, null]
+                ],
+      initSkyStand:  [
+                 null, null, null, null, null, null
+                ],
+      initForestStand:  [
+                 null, null, null, null, null, null
+                ],
+      pieces: pieces,
       currentPlayer: 1, 
       moveInProgress: false,
       activePiece: null,
@@ -167,7 +160,6 @@ class App extends React.Component {
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
   }
-
 
   componentDidMount() {
 
@@ -213,7 +205,7 @@ class App extends React.Component {
 
   handleClick (e) {
     e.preventDefault();
-    let status = this.state.moveInProgress;
+    let moving = this.state.moveInProgress;
     let board = this.state.initial.slice();
 
     let forest = this.state.initForestStand.slice();
@@ -221,20 +213,22 @@ class App extends React.Component {
     let z = forest.indexOf(null);
     let z2 = sky.indexOf(null);;
 
-    let pieces = newAllPieces;
-
     let active = this.state.activePiece;
+    let status = this.state.activated;
     
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
     let coordinates = [x, y];
+    let start = this.state.start.slice();
+    let x2 = start[0];
+    let y2 = start[1];
  
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
     
-    if (name === null && !status) {
+    if (name === null && !moving) {
       return;
-    } else if (name !== null && !status) {
+    } else if (name !== null && !moving) {
         let player = pieces[name].owner;
         if (turn !== player) {
           alert("Not this side's turn!");
@@ -244,14 +238,9 @@ class App extends React.Component {
        let currentPiece = pieces[name];
        this.setState({activePiece: currentPiece, start: coordinates});
 
-    } else if (status && name === null) {
+    } else if (moving && name === null) {
       
-      let x2 = this.state.start[0];
-      let y2 = this.state.start[1];
-      let piece = board[x2][y2];
-      let start = this.state.start;
-
-      let valid = this.isValidMove(start, piece.moves, coordinates)
+      let valid = this.isValidMove(start, active.moves, coordinates)
 
       if (valid) {
         board[x][y] = active;
@@ -262,27 +251,23 @@ class App extends React.Component {
        
       } else {
         alert("Invalid move!");
-        this.setState({moveInProgress: !status})
+        this.setState({moveInProgress: !moving})
         return;
       }
 
     } else {
 
-      let x2 = this.state.start[0];
-      let y2 = this.state.start[1];
-      let piece = board[x2][y2];
-      let start = this.state.start;
-      let valid = this.isValidMove(start, piece.moves, coordinates)
+      let valid = this.isValidMove(start, active.moves, coordinates)
 
       if (!valid) {
         alert('Invalid move');
-        this.setState({moveInProgress: !status});
+        this.setState({moveInProgress: !moving});
         return;
       }
 
       if (board[x][y].owner === turn) {
         alert("Can't capture own piece");
-        this.setState({moveInProgress: !status});
+        this.setState({moveInProgress: !moving});
         return;
   
       }
@@ -292,7 +277,6 @@ class App extends React.Component {
         board[x2][y2] = null;
      
         gametext = 'PLAYER TWO WINS';
-        let status = this.state.activated;
         this.setState({activated: !status});
         return;
 
@@ -303,14 +287,13 @@ class App extends React.Component {
         board[x2][y2] = null;
         
         gametext = 'PLAYER ONE WINS';
-        let status = this.state.activated;
         this.setState({activated: !status});
         return;
 
       }
 
       if (valid) {
-        piece.isCaptured = true;
+        board[x][y].isCaptured = true;
 
         if (board[x][y].owner == 0) {
 
@@ -327,7 +310,7 @@ class App extends React.Component {
         board[x][y] = active;
         board[x2][y2] = null;
 
-        this.setState({initial: board, moveInProgress: !status, activePiece: null})
+        this.setState({initial: board, moveInProgress: !moving, activePiece: null})
         this.switchPlayer();
         //this.forceUpdate();
 
@@ -335,7 +318,7 @@ class App extends React.Component {
     
      } 
 
-    this.setState({moveInProgress: !status})
+    this.setState({moveInProgress: !moving})
     //this.forceUpdate();
     
   }
@@ -343,11 +326,11 @@ class App extends React.Component {
   checkPiecePosition () {
     let board = this.state.initial.slice();
 
-    for (let key in newAllPieces) {
+    for (let key in pieces) {
       
-      let x = newAllPieces[key].position[0];
-      let y = newAllPieces[key].position[1];
-      board[x][y] = newAllPieces[key];
+      let x = pieces[key].position[0];
+      let y = pieces[key].position[1];
+      board[x][y] = pieces[key];
     }
 
     this.setState({initial: board});
@@ -355,7 +338,7 @@ class App extends React.Component {
   }
 
   movePiece (coordinates) {
-    let pieces = this.state.pieces;
+    let p = this.state.pieces;
 
   }
 
