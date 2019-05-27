@@ -1,11 +1,13 @@
+
+
 body {
   background-image: url('./assets/cloud forest.jpg');
-  background-size: cover;
+  background-size: fill;
   background-color: lightblue;
 }
 
 h1 {
-  font-size: 300%;
+  font-size: 200%;
   color: #DAA520;
   font-family: cursive, geneva;
   text-align: center;
@@ -14,21 +16,46 @@ h1 {
 }
 
 .game-board {
-  height: 50%;
-  width: 50%;
-  margin: auto;
+  max-width: 900px
+  max-height: 500px;
+  height: 85%;
+  width: 85%;
+  clear: both;
+  margin: 0 auto;
+  padding-bottom: 2%;
 }
 
 .board {
   float: left;
-  height: 80%;
+  height: 100%;
   width: 100%;
   padding-top: 10px;
-  padding-left: 50px;
   margin: auto;
 }
 
+#skyStand {
+    position: relative;
+    float: right;
+    width: 25%;
+    padding-top: 0px;
+    margin: auto;
+}
 
+#PlayerInfo {
+    position: relative;
+    float: right;
+    width: 30%;
+    margin-right: -250px;
+    padding-top: 0px;
+    margin: 25px;
+}
+
+#forestStand {
+    position: relative;
+    float: right;
+    width: 25%;
+    margin-top: 10px;
+}
 
 .square {
   float:left;
@@ -37,9 +64,32 @@ h1 {
   padding-bottom : 30%; 
   background-position: center center;
   background-repeat: no-repeat;
-  border: 2px solid grey !important;
+  border: 1px solid grey !important;
   background-size: cover;
   cursor: pointer;
+}
+
+@media (min-width: 801px) {
+
+ h1 {
+  font-size: 400%;
+  color: purple;
+  font-family: cursive, geneva;
+  text-align: center;
+  margin: auto;
+  width: auto;
+} 
+  
+.game-board {
+  margin-top: -25%;
+  position: relative;
+  height: 35%;
+  width: 35%;
+  clear: both;
+  margin: 0 auto;
+  padding-bottom: 2%;
+}
+  
 }
 
 .img1 {
@@ -125,32 +175,6 @@ h1 {
 .img18 { 
   background-size: cover;
   background-image:url('./assets/bench/6.png'); 
-}
-
-#skyStand {
-    position: relative;
-    float: right;
-    width: 30%;
-    margin-right: -150px;
-    padding-top: 0px;
-    margin: 25px;
-}
-
-#PlayerInfo {
-    position: relative;
-    float: right;
-    width: 30%;
-    margin-right: -250px;
-    padding-top: 0px;
-    margin: 25px;
-}
-
-#forestStand {
-    float: right;
-    width: 30%;
-    margin-right: -150px;
-    padding-top: 100px;
-    margin: 25px;
 }
 
 .playerElephant { 
@@ -271,10 +295,6 @@ h1 {
     margin:auto;
     content:url('./assets/pieces/sky/lion.png');
     position: absolute;
-}
-
-.piece-stand {
-  float: right;
 }
 
 .gamestatus {

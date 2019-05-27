@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import axios from 'axios';
+//import axios from 'axios';
 import Game from './components/Game.jsx';
 import GameStatus from './components/GameStatus.jsx';
 
@@ -218,7 +218,6 @@ class App extends React.Component {
       activePiece: null,
       start:[],
       end:[],
-      captures:[],
       activated: false
     }
 
@@ -235,13 +234,13 @@ class App extends React.Component {
 
     this.checkPiecePosition()
 
-    axios.get('/users')
-     .then(function (response) {
-       console.log(response);
-     })
-     .catch(function (error) {
-       console.log(error);
-     });
+    // axios.get('/users')
+    //  .then(function (response) {
+    //    console.log(response);
+    //  })
+    //  .catch(function (error) {
+    //    console.log(error);
+    //  });
   }
 
   updatePlayerInfo(text) {
@@ -318,7 +317,6 @@ class App extends React.Component {
     let pieces = this.state.pieces;
 
     let active = this.state.activePiece;
-    let captures = this.state.captures.slice();
     
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
@@ -349,9 +347,6 @@ class App extends React.Component {
       let y2 = this.state.start[1];
       let piece = board[x2][y2];
       let start = this.state.start;
-      console.log('current', piece)
-      console.log('start', start)
-      console.log('dest', coordinates)
 
       let valid = this.isValidMove(start, piece.moves, coordinates)
 
@@ -364,8 +359,6 @@ class App extends React.Component {
         this.setState({moveInProgress: !status})
         return;
       }
-
-      
 
     } else {
 
@@ -458,7 +451,6 @@ class App extends React.Component {
       board[x][y] = newAllPieces[key];
     }
 
-  
     this.setState({initial: board});
 
   }
@@ -468,7 +460,14 @@ class App extends React.Component {
 
   }
 
- //{this.state.activated ? setTimeout(refreshPage, 3000) : null}
+  handleBenchClick (e) {
+    e.preventDefault();
+    let forest = this.state.initForestStand.slice();
+    let sky = this.state.initSkyStand.slice();
+
+
+  }
+
   render () {
     return (
       <div>
