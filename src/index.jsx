@@ -9,6 +9,7 @@ let gametext;
 let pieces = {
   playerLion: {
     name: 'playerLion',
+    alt: 'enemyLion',
     owner: 1,
     position: [3, 1],
     active: false,
@@ -25,7 +26,6 @@ let pieces = {
       { row: 1,  col: 1  }, // Southeast
       { row: -1, col: 1  }, // Northeast
     ]
-
     },
   playerChick : {
     name: 'playerChick',
@@ -40,7 +40,20 @@ let pieces = {
       { row: -1, col: 0 }   // North
     ]
   },
-
+   playerHen : {
+    name: 'playerHen',
+    owner: 1,   
+    position: [],
+    isCaptured: false,
+    moves: [
+      { row: 1,  col: 0  }, // South
+      { row: -1, col: 0  }, // North
+      { row: 0,  col: -1 }, // East
+      { row: 0,  col: 1  }, // West
+      { row: -1, col: -1 }, // Northwest
+      { row: -1, col: 1  }, // Northeast
+    ]
+    },
   playerGiraffe : {
     name: 'playerGiraffe',
     alt: 'enemyGiraffe',
@@ -57,6 +70,7 @@ let pieces = {
 
   playerElephant : {
     name: 'playerElephant',
+    alt: 'enemyElephant',
     owner: 1,
     position: [3, 0],
     isCaptured: false,
@@ -87,9 +101,9 @@ let pieces = {
     ]
 
     },
-
   enemyChick : {
     name: 'enemyChick',
+    alt: 'playerChick',
     owner: 0,
     position: [1, 1],
     isCaptured: false,
@@ -98,9 +112,23 @@ let pieces = {
       { row: 1, col: 0 }  // South
     ]
     },
-
+  enemyHen : {
+    name: 'enemyHen',
+    owner: 0,   
+    position: [],
+    isCaptured: false,
+    moves: [
+      { row: 1,  col: 0  }, // South
+      { row: -1, col: 0  }, // North
+      { row: 0,  col: -1 }, // East
+      { row: 0,  col: 1  }, // West
+      { row: 1,  col: -1 }, // Southwest
+      { row: 1,  col: 1  }, // Southeast
+    ]
+    },
   enemyGiraffe : {
     name: 'enemyGiraffe',
+    alt: 'playerGiraffe',
     owner: 0,
     isCaptured: false,
     position: [0, 0],
@@ -205,6 +233,7 @@ class App extends React.Component {
 
   handleClick (e) {
     e.preventDefault();
+
     let moving = this.state.moveInProgress;
     let board = JSON.parse(JSON.stringify(this.state.initial));
 
@@ -225,6 +254,7 @@ class App extends React.Component {
  
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
+    
     
     if (name === null && !moving) {
       return;
@@ -289,7 +319,6 @@ class App extends React.Component {
         gametext = 'PLAYER ONE WINS';
         this.setState({activated: !status});
         return;
-
       }
 
       if (valid) {
@@ -297,13 +326,13 @@ class App extends React.Component {
 
           if (board[x][y].owner == 0) {
 
-            board[x][y].owner = 1;
-            forest[z] = board[x][y];
+            let capture = board[x][y];
+            forest[z] = pieces[capture['alt']];
             this.setState({initForestStand:forest})
           } else {
 
-            board[x][y].owner = 0;
-            sky[z2] = board[x][y];
+            let capture = board[x][y]
+            sky[z2] = pieces[capture['alt']];
             this.setState({initSkyStand:sky})
           } 
       
@@ -313,6 +342,7 @@ class App extends React.Component {
         this.setState({initial: board, moveInProgress: !moving, activePiece: null })
         this.switchPlayer();
         this.forceUpdate();
+        return;
 
       } 
     
@@ -320,18 +350,22 @@ class App extends React.Component {
 
     this.setState({moveInProgress: !moving});
     this.forceUpdate();
+    return;
     
   }
 
   startPiecePosition () {
+
     let board = JSON.parse(JSON.stringify(this.state.initial));
 
-    for (let key in pieces) {
-      
-      let x = pieces[key].position[0];
-      let y = pieces[key].position[1];
-      board[x][y] = pieces[key];
-    }
+    board[0][2] = pieces.enemyElephant;
+    board[0][0] = pieces.enemyGiraffe;
+    board[1][1] = pieces.enemyChick;
+    board[0][1] = pieces.enemyLion;
+    board[3][0] = pieces.playerElephant;
+    board[3][2] = pieces.playerGiraffe;
+    board[2][1] = pieces.playerChick;
+    board[3][1] = pieces.playerLion;
 
     this.setState({initial: board});
 
@@ -344,8 +378,20 @@ class App extends React.Component {
 
   handleBenchClick (e) {
     e.preventDefault();
-    let forest = this.state.initForestStand.slice();
-    let sky = this.state.initSkyStand.slice();
+    // let forest = this.state.initForestStand.slice();
+    // let sky = this.state.initSkyStand.slice();
+    // let moving = this.state.moveInProgress;
+    // let board = JSON.parse(JSON.stringify(this.state.initial));
+    // let active = this.state.activePiece;
+    // let x = parseInt(e.target.getAttribute('x'));
+    // let y = parseInt(e.target.getAttribute('y'));
+    // let coordinates = [x, y];
+    // let start = this.state.start.slice();
+    // let x2 = start[0];
+    // let y2 = start[1];
+ 
+    // let name = e.target.getAttribute('name')//string or null
+    // let turn = this.state.currentPlayer;
 
 
   }
