@@ -43,6 +43,7 @@ let pieces = {
   },
    playerHen : {
     name: 'playerHen',
+    alt: 'enemyChick',
     owner: 1,   
     position: [],
     isCaptured: false,
@@ -115,6 +116,7 @@ let pieces = {
     },
   enemyHen : {
     name: 'enemyHen',
+    alt: 'playerChick',
     owner: 0,   
     position: [],
     isCaptured: false,
@@ -160,21 +162,8 @@ function refreshPage(){
   setTimeout(location.reload.bind(location), 2500);; 
 }
 
-function hack(name){
-  console.log('firing', name)
-  if (name === null || name === undefined) {
-    return;
-  }
-  let goAway = document.getElementsByClassName(name)[0];
-  console.log('result', goAway)
-  //goAway.style.visibility='hidden';
-  //goAway.style.display='none';
-  goAway.style.height='0px'
-  goAway.offsetHeight;
-  goAway.style.content='none';
-  //window.dispatchEvent(new Event('resize'));
-  //goAway.style.display='block;'
-  let size = 1.01 + Math.random()/1000;
+function hack(){//solves laggy repaint in Safari/mobile browsers
+  let size = 1.001 + Math.random()/1000;
   window.parent.parent.document.body.style.zoom = size;
 } 
 
@@ -278,7 +267,6 @@ class App extends React.Component {
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
     
-    
     if (name === null && !moving) {
       return;
     } else if (name !== null && !moving) {
@@ -288,7 +276,6 @@ class App extends React.Component {
           return;
         }
 
-      
        let currentPiece = pieces[name];
        this.setState({activePiece: currentPiece, start: coordinates, source: name});
 
@@ -298,13 +285,11 @@ class App extends React.Component {
 
       if (valid) {
         board[x][y] = active;
-        let test = board[x2][y2].name;
-        hack(test);
         board[x2][y2] = null;
         this.setState({initial: board})
+        hack();
         this.switchPlayer();
-        this.forceUpdate();
-    
+        //this.forceUpdate();
        
       } else {
         alert("Invalid move!");
@@ -365,14 +350,13 @@ class App extends React.Component {
           } 
       
         board[x][y] = active;
-        let test = board[x2][y2].name;
-        hack(test);
         board[x2][y2] = null;
 
         this.setState({initial: board, moveInProgress: !moving, activePiece: null })
+        hack();
         this.switchPlayer();
-        this.forceUpdate();
-        //window.dispatchEvent(new Event('resize'));
+        //this.forceUpdate();
+        
         return;
 
       } 
@@ -380,8 +364,8 @@ class App extends React.Component {
      } 
 
     this.setState({moveInProgress: !moving});
-    hack(null);
-    this.forceUpdate();
+    hack();
+    //this.forceUpdate();
 
     return;
     
