@@ -9,8 +9,9 @@ export default class SkyPieceStand extends React.PureComponent {
   renderSquare(i, id) {
      return (
       <Square 
-        handleClick={this.props.handleClick}
+        handleClick={this.props.handleBenchClick}
         piece={this.props.status[i]}
+        loc={i}
         id= {id}
       />
     );

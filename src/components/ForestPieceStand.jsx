@@ -1,7 +1,6 @@
 import React from 'react';
 import Square from './Square.jsx';
 
-
 export default class ForestPieceStand extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -10,15 +9,15 @@ export default class ForestPieceStand extends React.PureComponent {
   renderSquare(i, id) {
      return (
       <Square 
-        handleClick={this.props.handleClick}
+        handleClick={this.props.handleBenchClick}
         piece={this.props.status[i]}
+        loc={i}
         id= {id}
       />
     );
   }
 
   render() {
-
     return (
         <div id="forestStand">
           {this.renderSquare(0, 13)}

@@ -16,6 +16,7 @@ let pieces = {
     isCaptured: false,
     isUnderCheck: false,
     reachedOpp: false,
+    source: null,
     moves: [
       { row: 1,  col: 0  }, // South
       { row: -1, col: 0  }, // North
@@ -159,6 +160,24 @@ function refreshPage(){
   setTimeout(location.reload.bind(location), 2500);; 
 }
 
+function hack(name){
+  console.log('firing', name)
+  if (name === null || name === undefined) {
+    return;
+  }
+  let goAway = document.getElementsByClassName(name)[0];
+  console.log('result', goAway)
+  //goAway.style.visibility='hidden';
+  //goAway.style.display='none';
+  goAway.style.height='0px'
+  goAway.offsetHeight;
+  goAway.style.content='none';
+  //window.dispatchEvent(new Event('resize'));
+  //goAway.style.display='block;'
+  let size = 1.01 + Math.random();
+  window.parent.parent.document.body.style.zoom = size;
+} 
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -178,12 +197,15 @@ class App extends React.Component {
       pieces: pieces,
       currentPlayer: 1, 
       moveInProgress: false,
+      isDropping: false,
       activePiece: null,
       start:[],
+      drop:[],
       activated: false
     }
 
     this.handleClick = this.handleClick.bind(this);
+    this.handleBenchClick = this.handleBenchClick.bind(this);
     this.startPiecePosition = this.startPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
@@ -236,6 +258,7 @@ class App extends React.Component {
 
     let moving = this.state.moveInProgress;
     let board = JSON.parse(JSON.stringify(this.state.initial));
+    let source = this.state.source;
 
     let forest = this.state.initForestStand.slice();
     let sky = this.state.initSkyStand.slice();
@@ -265,8 +288,9 @@ class App extends React.Component {
           return;
         }
 
+      
        let currentPiece = pieces[name];
-       this.setState({activePiece: currentPiece, start: coordinates});
+       this.setState({activePiece: currentPiece, start: coordinates, source: name});
 
     } else if (moving && name === null) {
       
@@ -274,10 +298,13 @@ class App extends React.Component {
 
       if (valid) {
         board[x][y] = active;
+        let test = board[x2][y2].name;
+        hack(test);
         board[x2][y2] = null;
         this.setState({initial: board})
         this.switchPlayer();
         this.forceUpdate();
+    
        
       } else {
         alert("Invalid move!");
@@ -329,6 +356,7 @@ class App extends React.Component {
             let capture = board[x][y];
             forest[z] = pieces[capture['alt']];
             this.setState({initForestStand:forest})
+          
           } else {
 
             let capture = board[x][y]
@@ -337,11 +365,14 @@ class App extends React.Component {
           } 
       
         board[x][y] = active;
+        let test = board[x2][y2].name;
+        hack(test);
         board[x2][y2] = null;
 
         this.setState({initial: board, moveInProgress: !moving, activePiece: null })
         this.switchPlayer();
         this.forceUpdate();
+        //window.dispatchEvent(new Event('resize'));
         return;
 
       } 
@@ -349,7 +380,9 @@ class App extends React.Component {
      } 
 
     this.setState({moveInProgress: !moving});
+    hack(null);
     this.forceUpdate();
+
     return;
     
   }
@@ -378,20 +411,46 @@ class App extends React.Component {
 
   handleBenchClick (e) {
     e.preventDefault();
-    // let forest = this.state.initForestStand.slice();
-    // let sky = this.state.initSkyStand.slice();
-    // let moving = this.state.moveInProgress;
-    // let board = JSON.parse(JSON.stringify(this.state.initial));
-    // let active = this.state.activePiece;
-    // let x = parseInt(e.target.getAttribute('x'));
-    // let y = parseInt(e.target.getAttribute('y'));
-    // let coordinates = [x, y];
-    // let start = this.state.start.slice();
-    // let x2 = start[0];
-    // let y2 = start[1];
+    e.stopPropagation();
+    let forest = this.state.initForestStand.slice();
+    let sky = this.state.initSkyStand.slice();
+    let drop = this.state.isDropping;
+    let board = JSON.parse(JSON.stringify(this.state.initial));
+    let active = this.state.activePiece;
+    let x = parseInt(e.target.getAttribute('x'));
+    let y = parseInt(e.target.getAttribute('y'));
+    let coordinates = [x, y];
+    let start = this.state.start.slice();
+    let x2 = start[0];
+    let y2 = start[1];
  
-    // let name = e.target.getAttribute('name')//string or null
-    // let turn = this.state.currentPlayer;
+    let name = e.target.getAttribute('name')//string or null
+    let spot = e.target.getAttribute('loc')
+    let turn = this.state.currentPlayer;
+    alert('online')
+    if (name === null && !drop) {
+      alert('touch')
+      return;
+    } else if (name !== null && !drop) {
+        //alert(e.target.getAttribute('name'))
+        let player = pieces[name].owner;
+        if (turn !== player) {
+          alert("Not this side's turn!");
+          return;
+        }
+
+       let currentPiece = pieces[name];
+       alert('active drop')
+       this.setState({activePiece: currentPiece, moveInProgress: !drop});
+
+    } else if (drop && name === null) {
+      console.log('firing')
+       board[x][y] = active;
+       this.setState({initial: board})
+       this.switchPlayer();
+    } else {
+
+    }
 
 
   }
@@ -399,7 +458,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Board status={this.state.initial} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
+        <Board status={this.state.initial} handleBenchClick={this.handleBenchClick} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
         {this.state.activated ? <div className="gamestatus"> {gametext} </div> : null}
         {this.state.activated ? refreshPage() : null}
       </div>)
