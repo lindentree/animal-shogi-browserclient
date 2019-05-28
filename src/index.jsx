@@ -174,7 +174,7 @@ function hack(name){
   goAway.style.content='none';
   //window.dispatchEvent(new Event('resize'));
   //goAway.style.display='block;'
-  let size = 1.01 + Math.random();
+  let size = 1.01 + Math.random()/1000;
   window.parent.parent.document.body.style.zoom = size;
 } 
 
@@ -332,7 +332,7 @@ class App extends React.Component {
       if (name == 'playerLion') {
         board[x][y] = active;
         board[x2][y2] = null;
-     
+        this.setState({initial: board});
         gametext = 'PLAYER TWO WINS';
         this.setState({activated: !status});
         return;
@@ -342,7 +342,7 @@ class App extends React.Component {
       if (name == 'enemyLion') {
         board[x][y] = active;
         board[x2][y2] = null;
-        
+        this.setState({initial: board});
         gametext = 'PLAYER ONE WINS';
         this.setState({activated: !status});
         return;
