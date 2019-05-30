@@ -11,11 +11,18 @@ function Square(props) {
 
    useForceUpdate(param);
 
+   let mark = props.mark;
+
+   if (mark === undefined || mark === null) {
+     mark ="board";
+   }
+
    if (param === undefined || param === null ) {
      return (
      
      <div onClick={props.handleClick} >
-      <button 
+      <button
+        id={mark} 
         className={"square img" + props.id} 
         x={props.row} 
         y={props.col}>
@@ -28,7 +35,8 @@ function Square(props) {
 
       <div onClick={props.handleClick} >
         <button className={"square img" + props.id} >
-          <div 
+          <div
+            id={mark}
             className={props.piece.name} 
             name={props.piece.name} 
             x={props.row} 

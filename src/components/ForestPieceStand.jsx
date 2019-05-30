@@ -2,16 +2,12 @@ import React from 'react';
 import Square from './Square.jsx';
 
 export default class ForestPieceStand extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
-  renderSquare(i, id) {
+  renderSquare(i, id, mark) {
      return (
-      <Square 
+    <Square 
         handleClick={this.props.handleBenchClick}
         piece={this.props.status[i]}
-        loc={i}
+        mark={mark}
         id= {id}
       />
     );
@@ -19,14 +15,14 @@ export default class ForestPieceStand extends React.PureComponent {
 
   render() {
     return (
-        <div id="forestStand">
-          {this.renderSquare(0, 13)}
-          {this.renderSquare(1, 14)}
-          {this.renderSquare(2, 15)}
-          {this.renderSquare(3, 16)}
-          {this.renderSquare(4, 17)}
-          {this.renderSquare(5, 18)}
-        </div>      
+      <div id="forestStand">
+        {this.renderSquare(0, 13, "bench")}
+        {this.renderSquare(1, 14, "bench")}
+        {this.renderSquare(2, 15, "bench")}
+        {this.renderSquare(3, 16, "bench")}
+        {this.renderSquare(4, 17, "bench")}
+        {this.renderSquare(5, 18, "bench")}
+      </div>
     );
   }
 }

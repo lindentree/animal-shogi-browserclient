@@ -361,9 +361,9 @@ class App extends React.Component {
 
       } 
     
-     } 
+     }
 
-    this.setState({moveInProgress: !moving});
+    this.setState({ moveInProgress: !moving });
     hack();
     //this.forceUpdate();
 
@@ -384,13 +384,17 @@ class App extends React.Component {
     board[2][1] = pieces.playerChick;
     board[3][1] = pieces.playerLion;
 
-    this.setState({initial: board});
-
+    this.setState({ initial: board });
   }
 
   movePiece (coordinates) {
     let p = this.state.pieces;
 
+  }
+
+  reachedLastRow () {
+    let playerOppRank = [[],[],[]];
+    let enemyOppRank = [[],[],[]];
   }
 
   handleBenchClick (e) {

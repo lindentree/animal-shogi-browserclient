@@ -4,25 +4,20 @@ import SkyPieceStand from './SkyPieceStand.jsx';
 import ForestPieceStand from './ForestPieceStand.jsx';
 
 export default class Board extends React.PureComponent {
-  constructor(props) {
-    super(props);
-  }
 
   renderSquare(i, j, id) {
     return (
-      <Square 
+      <Square
         id={id}
         key={i + '0' + j}
-        piece={this.props.status[i][j]} 
+        piece={this.props.status[i][j]}
         handleClick={this.props.handleClick}
         row={i}
         col={j}
       />
     );
   }
-
-  render() {
-    
+render() {
     return (
       <React.Fragment>
       <SkyPieceStand status={this.props.skystand} handleBenchClick={this.props.handleBenchClick}/>
