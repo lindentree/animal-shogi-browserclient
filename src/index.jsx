@@ -31,7 +31,7 @@ let pieces = {
   playerChick : {
     name: 'playerChick',
     alt: 'enemyChick',
-    promote: 'playerChick',
+    promote: 'playerHen',
     owner: 1,
     position: [2, 1],
     isCaptured: false,
@@ -106,6 +106,7 @@ let pieces = {
   enemyChick : {
     name: 'enemyChick',
     alt: 'playerChick',
+    promote: 'enemyHen',
     owner: 0,
     position: [1, 1],
     isCaptured: false,
@@ -198,6 +199,7 @@ class App extends React.Component {
     this.startPiecePosition = this.startPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
+    this.reachedLastRow = this.reachedLastRow.bind(this);
   }
 
   componentDidMount() {
@@ -289,8 +291,21 @@ class App extends React.Component {
       let valid = this.isValidMove(start, active.moves, coordinates)
 
       if (valid) {
+        if (active.name === 'playerChick' || active.name === 'enemyChick') {
+          let test = this.reachedLastRow(active, coordinates);
+          if (test) {
+            active = pieces[active.promote];
+          } else {
+            return;
+          }
+         
+        }
+
         board[x][y] = active;
         board[x2][y2] = null;
+
+
+
         this.setState({board: board, moveInProgress: false});
         hack();
         this.switchPlayer();
@@ -316,7 +331,7 @@ class App extends React.Component {
           this.setState({moveInProgress: false});
           return;
   
-        }
+        }  
 
         if (name == 'playerLion') {
           board[x][y] = active;
@@ -339,6 +354,13 @@ class App extends React.Component {
 
         if (valid) {
           board[x][y].isCaptured = true;
+
+          if (active.name === 'playerChick' || active.name === 'enemyChick') {
+            let test = this.reachedLastRow(active, coordinates);
+            if (test) {
+              active = pieces[active.promote];
+            } 
+          } 
 
           if (board[x][y].owner == 0) {
 
@@ -431,11 +453,28 @@ class App extends React.Component {
   }
 
   reachedLastRow (player, position) {
-    let playerOppRank = [[0, 0],[0, 1],[0, 2]];
-    let enemyOppRank = [[3, 0],[3, 1],[3, 2]];
+    
+    let p = [[0, 0],[0, 1],[0, 2]];
+    let e = [[3, 0],[3, 1],[3, 2]];
 
-    if (player === 1) {
-
+    if (player.owner === 1) {
+    
+      for (let i = 0; i < p.length; i += 1) {
+        if(position[0] === p[i][0] && position[1] === p[i][1]) {
+  
+          return true;
+        } else {
+          continue;
+        }
+      }
+    } else {
+        for (let i = 0; i < e.length; i += 1) {
+          if(position[0] === e[i][0] && position[1] === e[i][1]) {
+            return true;
+          } else {
+            continue;
+          }
+      }
     }
 
     return false;
