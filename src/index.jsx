@@ -190,6 +190,7 @@ class App extends React.Component {
       activePiece: null,
       start:[],
       drop:[],
+      dropOrigin: null,
       activated: false
     }
 
@@ -254,8 +255,12 @@ class App extends React.Component {
     let z = forest.indexOf(null);
     let z2 = sky.indexOf(null);;
 
+    let mark = e.target.getAttribute('id');
+
     let active = this.state.activePiece;
     let status = this.state.activated;
+    let dropping = this.state.isDropping;
+    let dropOrigin = this.state.dropOrigin;
     
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
@@ -266,6 +271,32 @@ class App extends React.Component {
  
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
+
+    if (name === null && mark === 'bench') {
+      return;
+    } else if (name !== null && mark === 'bench' ){
+      let currentPiece = pieces[name];
+        if (currentPiece.owner === 1) {
+          dropOrigin = forest.indexOf(currentPiece);
+          this.setState({dropOrigin: dropOrigin});
+        } else {
+          dropOrigin = sky.indexOf(currentPiece); 
+          this.setState({dropOrigin: dropOrigin});
+        }
+      this.setState({activePiece: currentPiece, isDropping: !dropping})
+    }
+
+    if(dropping) {
+      if (name === null && mark === 'board') {
+        board[x][y] = activePiece;
+        dropOrigin = null;
+        this.setState({activePiece: null, isDropping: !dropping})
+        this.switchPlayer();
+      } else {
+        alert('Invalid drop');
+        return;
+      }
+    } else {
     
     if (name === null && !moving) {
       return;
@@ -362,6 +393,7 @@ class App extends React.Component {
       } 
     
      }
+    }
 
     this.setState({ moveInProgress: !moving });
     hack();
@@ -392,9 +424,19 @@ class App extends React.Component {
 
   }
 
-  reachedLastRow () {
-    let playerOppRank = [[],[],[]];
-    let enemyOppRank = [[],[],[]];
+  reachedLastRow (player, position) {
+    let playerOppRank = [[0, 0],[0, 1],[0, 2]];
+    let enemyOppRank = [[3, 0],[3, 1],[3, 2]];
+
+    if (player === 1) {
+
+    }
+
+    return false;
+  }
+
+  isLionUnderCheck (lion) {
+
   }
 
   handleBenchClick (e) {
@@ -446,7 +488,7 @@ class App extends React.Component {
   render () {
     return (
       <div>
-        <Board status={this.state.initial} handleBenchClick={this.handleBenchClick} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
+        <Board status={this.state.initial} handleClick={this.handleClick} skystand={this.state.initSkyStand} foreststand={this.state.initForestStand}/>
         {this.state.activated ? <div className="gamestatus"> {gametext} </div> : null}
         {this.state.activated ? refreshPage() : null}
       </div>)

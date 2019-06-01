@@ -5,7 +5,7 @@ export default class ForestPieceStand extends React.PureComponent {
   renderSquare(i, id, mark) {
      return (
     <Square 
-        handleClick={this.props.handleBenchClick}
+        handleClick={this.props.handleClick}
         piece={this.props.status[i]}
         mark={mark}
         id= {id}

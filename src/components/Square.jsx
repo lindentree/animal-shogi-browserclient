@@ -14,7 +14,7 @@ function Square(props) {
    let mark = props.mark;
 
    if (mark === undefined || mark === null) {
-     mark ="board";
+     mark = "board";
    }
 
    if (param === undefined || param === null ) {
