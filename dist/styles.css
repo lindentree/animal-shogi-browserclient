@@ -51,17 +51,16 @@ h1 {
   position: relative;
   width: 30%;
   padding-bottom: 30%; 
+  margin: 0;
   background-position: center center;
   background-repeat: no-repeat;
   border: 0.2px solid grey;
   background-size: cover;
 }
 
-.square:focus {
-  outline: 4px solid red;
-  outline-offset: -2px;
-  border: 2px solid transparent red;
-  
+.square:hover {
+  outline: 5px solid red;
+  outline-offset: -3px;
 }
 
 .gamestatus {
