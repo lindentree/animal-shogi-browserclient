@@ -270,10 +270,6 @@ class App extends React.Component {
  
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
-   
-    if (name === null && mark === 'bench') {
-      return;
-    } 
 
     if (name === null && !moving && !dropping) {
       return;
@@ -295,14 +291,14 @@ class App extends React.Component {
       if (valid) {
         board[x][y] = active;
         board[x2][y2] = null;
-        this.setState({board: board})
+        this.setState({board: board, moveInProgress: false});
         hack();
         this.switchPlayer();
         return;
         //this.forceUpdate();     
       } else {
           alert("Invalid move!");
-          this.setState({moveInProgress: !moving})
+          this.setState({moveInProgress: false});
           return;
       }
     } else if (moving && name !== null && !dropping && mark === 'board'){
@@ -311,13 +307,13 @@ class App extends React.Component {
 
         if (!valid) {
           alert('Invalid move');
-          this.setState({moveInProgress: !moving});
+          this.setState({moveInProgress: false});
           return;
         }
 
         if (board[x][y].owner === turn) {
           alert("Can't capture own piece");
-          this.setState({moveInProgress: !moving});
+          this.setState({moveInProgress: false});
           return;
   
         }
@@ -368,6 +364,12 @@ class App extends React.Component {
       } 
     } else if (name !== null && mark === 'bench' && !moving){
         let currentPiece = pieces[name];
+        
+        if (turn !== currentPiece.owner) {
+            alert("Not this side's turn!");
+            return;
+          }
+
         if (currentPiece.owner === 1) {
           dropOrigin = forest.indexOf(currentPiece);
           this.setState({dropOrigin: dropOrigin});
@@ -379,31 +381,32 @@ class App extends React.Component {
       return;
 
     } else if (name === null && mark === 'board' && dropping) {
-        let player;
+        let bench;
 
         if(this.state.currentPlayer === 1) {
-          player = forest;
+          bench = forest;
        
         } else {
-          player = sky;
+          bench = sky;
         }
 
         board[x][y] = active;
-        player[dropOrigin] = null;
+        bench[dropOrigin] = null;
         this.setState({board:board, activePiece: null, isDropping: false, forest: forest, sky: sky})
         this.switchPlayer();
         hack();
         return;
-      } else {
+      } else if (name !== null && mark === 'board' && dropping || mark === 'bench'){
           this.setState({isDropping: false})
           alert('Invalid drop');
           return;
+      } else {
+          hack();
+          this.switchPlayer();
+          //this.forceUpdate();
+          return;
       }
-       
-    hack();
-    //this.forceUpdate();
-    return;
-    
+      this.switchPlayer();
   }
 
   startPiecePosition () {
