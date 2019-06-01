@@ -195,7 +195,6 @@ class App extends React.Component {
     }
 
     this.handleClick = this.handleClick.bind(this);
-    this.handleBenchClick = this.handleBenchClick.bind(this);
     this.startPiecePosition = this.startPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
@@ -271,10 +270,11 @@ class App extends React.Component {
  
     let name = e.target.getAttribute('name')//string or null
     let turn = this.state.currentPlayer;
-
+   
     if (name === null && mark === 'bench') {
       return;
     } else if (name !== null && mark === 'bench' ){
+      console.log("san", mark)
       let currentPiece = pieces[name];
         if (currentPiece.owner === 1) {
           dropOrigin = forest.indexOf(currentPiece);
@@ -283,15 +283,18 @@ class App extends React.Component {
           dropOrigin = sky.indexOf(currentPiece); 
           this.setState({dropOrigin: dropOrigin});
         }
-      this.setState({activePiece: currentPiece, isDropping: !dropping})
+      this.setState({activePiece: currentPiece, isDropping: true})
     }
 
     if(dropping) {
+      console.log('outer fire')
       if (name === null && mark === 'board') {
-        board[x][y] = activePiece;
+        console.log('inner fire')
+        board[x][y] = active;
         dropOrigin = null;
-        this.setState({activePiece: null, isDropping: !dropping})
+        this.setState({initial:board, activePiece: null, isDropping: !dropping})
         this.switchPlayer();
+        hack();
       } else {
         alert('Invalid drop');
         return;
