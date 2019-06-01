@@ -333,6 +333,15 @@ class App extends React.Component {
   
         }  
 
+        if (valid) {
+
+        if (active.name === 'playerChick' || active.name === 'enemyChick') {
+            let test = this.reachedLastRow(active, coordinates);
+            if (test) {
+              active = pieces[active.promote];
+            } 
+          }
+
         if (name == 'playerLion') {
           board[x][y] = active;
           board[x2][y2] = null;
@@ -352,17 +361,11 @@ class App extends React.Component {
           return;
         }
 
-        if (valid) {
           board[x][y].isCaptured = true;
 
-          if (active.name === 'playerChick' || active.name === 'enemyChick') {
-            let test = this.reachedLastRow(active, coordinates);
-            if (test) {
-              active = pieces[active.promote];
-            } 
-          } 
+   
 
-          if (board[x][y].owner == 0) {
+        if (board[x][y].owner == 0) {
 
             let capture = board[x][y];
             forest[z] = pieces[capture['alt']];
