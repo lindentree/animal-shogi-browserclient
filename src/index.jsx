@@ -306,7 +306,7 @@ class App extends React.Component {
           if (test) {
             active = pieces[active.promote];
           } else {
-            return;
+          
           }
          
         }
@@ -391,27 +391,35 @@ class App extends React.Component {
                   gametext = 'PLAYER TWO WINS';
                 }
 
-
-                 if (board[x][y].owner === 0) {
-
-                  let capture = board[x][y];
-                  forest[z] = pieces[capture['alt']];
-              
+                this.setState({board: board, activated: true});
+                return;
           
-                } else {
+              } else {
 
                   let capture = board[x][y]
-                  sky[z2] = pieces[capture['alt']];
 
-                } 
+                  if (capture.name === 'enemyLion' || capture.name === 'playerLion') {
+                    if (capture.owner === 1) {
+                      gametext = 'PLAYER TWO WINS';
+                      this.setState({board: board, activated: true});
+                      return;
 
-                 board[x][y] = active;
-                 board[x2][y2] = null;
+                    } else {
+                      gametext = 'PLAYER ONE WINS';
+                      this.setState({board: board, activated: true});
+                      return;
 
-                this.setState({forest: forest, sky: sky, board: board, moveInProgress: false, activated: true});
-                return;
+                    }
+                  }
+            } 
 
-              } else {
+            board[x][y] = active;
+            board[x2][y2] = null;
+
+            this.setState({forest: forest, sky: sky, board: board, moveInProgress: false, activated: true});
+            return;
+
+        } else {
 
                 if (board[x][y].owner === 0) {
 
