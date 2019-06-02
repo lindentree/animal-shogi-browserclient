@@ -192,7 +192,8 @@ class App extends React.Component {
       start:[],
       drop:[],
       dropOrigin: null,
-      activated: false
+      activated: false,
+      lion: false
     }
 
     this.handleClick = this.handleClick.bind(this);
@@ -250,7 +251,6 @@ class App extends React.Component {
 
     let moving = this.state.moveInProgress;
     let board = JSON.parse(JSON.stringify(this.state.board));
-    let source = this.state.source;
 
     let forest = this.state.forest.slice();
     let sky = this.state.sky.slice();
@@ -263,6 +263,7 @@ class App extends React.Component {
     let status = this.state.activated;
     let dropping = this.state.isDropping;
     let dropOrigin = this.state.dropOrigin;
+    let lion = this.state.lion;
     
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
@@ -292,6 +293,14 @@ class App extends React.Component {
       let valid = this.isValidMove(start, active.moves, coordinates)
 
       if (valid) {
+       
+        if(lion) {
+          alert('You must capture the lion!');
+          this.setState({moveInProgress: false});
+          return;
+        }
+
+
         if (active.name === 'playerChick' || active.name === 'enemyChick') {
           let test = this.reachedLastRow(active, coordinates);
           if (test) {
@@ -303,27 +312,35 @@ class App extends React.Component {
         }
 
         if (active.name === 'playerLion' || active.name === 'enemyLion') {
+          
           let test = this.reachedLastRow(active, coordinates);
             if (test) {
-              //console.log('fire')
+    
               let condition = this.isLionUnderCheck(board, turn, coordinates);
 
               if (!condition) {
-                console.log('fire')
+                
                 if (active.name === 'playerLion') {
                   gametext = 'PLAYER ONE WINS';
                 } else {
                   gametext = 'PLAYER TWO WINS';
                 }
 
-                 board[x][y] = active;
-                 board[x2][y2] = null;
-
-                this.setState({board: board, moveInProgress: false, activated: !status});
+                board[x][y] = active;
+                board[x2][y2] = null;
+                this.setState({board: board, moveInProgress: false, activated: true});
+                return;
 
               } else {
-                this.switchPlayer();
+
+                  board[x][y] = active;
+                  board[x2][y2] = null;
+                  this.setState({board: board, lion: true, moveInProgress: false})
+                  this.switchPlayer();
+                  return;
               }
+            } else {
+
             }
           
         }
@@ -360,6 +377,107 @@ class App extends React.Component {
 
         if (valid) {
 
+          if (active.name === 'playerLion' || active.name === 'enemyLion') {
+            
+          let test = this.reachedLastRow(active, coordinates);
+            if (test) {
+       
+              let condition = this.isLionUnderCheck(board, turn, coordinates);
+          
+              if (!condition) {
+                if (active.name === 'playerLion') {
+                  gametext = 'PLAYER ONE WINS';
+                } else {
+                  gametext = 'PLAYER TWO WINS';
+                }
+
+
+                 if (board[x][y].owner === 0) {
+
+                  let capture = board[x][y];
+                  forest[z] = pieces[capture['alt']];
+              
+          
+                } else {
+
+                  let capture = board[x][y]
+                  sky[z2] = pieces[capture['alt']];
+
+                } 
+
+                 board[x][y] = active;
+                 board[x2][y2] = null;
+
+                this.setState({forest: forest, sky: sky, board: board, moveInProgress: false, activated: true});
+                return;
+
+              } else {
+
+                if (board[x][y].owner === 0) {
+
+                  let capture = board[x][y];
+                  forest[z] = pieces[capture['alt']];
+              
+          
+                } else {
+
+                  let capture = board[x][y]
+                  sky[z2] = pieces[capture['alt']];
+
+                } 
+
+                board[x][y] = active;
+                board[x2][y2] = null;
+
+                this.setState({forest: forest, sky: sky, board: board, lion: true, moveInProgress: false})
+                this.switchPlayer();
+                return;
+              }
+            }
+          
+        }
+        if (lion) {
+          
+          if (name !== 'enemyLion' && name !== 'playerLion') {
+            alert('You must capture the lion!');
+            this.setState({moveInProgress: false});
+            return;
+          } else {
+              if (name === 'playerLion') {
+                board[x][y] = active;
+                board[x2][y2] = null;
+                gametext = 'PLAYER TWO WINS';
+                this.setState({board: board, lion: false, activated: true});
+              
+                return;
+
+             } else if (name === 'enemyLion') {
+                 board[x][y] = active;
+                 board[x2][y2] = null;
+                 gametext = 'PLAYER ONE WINS';
+                 this.setState({board: board, lion: false, activated: true});
+                 return;
+            }
+          }
+        }
+
+        if (name === 'playerLion') {
+          board[x][y] = active;
+          board[x2][y2] = null;
+          gametext = 'PLAYER TWO WINS';
+          this.setState({board: board, lion: false, activated: true});
+          return;
+
+        }  
+
+        if (name === 'enemyLion') {
+          board[x][y] = active;
+          board[x2][y2] = null;
+          gametext = 'PLAYER ONE WINS';
+          this.setState({board: board, lion: false, activated: true});
+          return;
+        }
+
         if (active.name === 'playerChick' || active.name === 'enemyChick') {
             let test = this.reachedLastRow(active, coordinates);
             if (test) {
@@ -367,56 +485,42 @@ class App extends React.Component {
             } 
         }
 
-        if (name == 'playerLion') {
-          board[x][y] = active;
-          board[x2][y2] = null;
-          this.setState({board: board});
-          gametext = 'PLAYER TWO WINS';
-          this.setState({activated: !status});
-          return;
+        board[x][y].isCaptured = true;
 
-        }  
-
-        if (name == 'enemyLion') {
-          board[x][y] = active;
-          board[x2][y2] = null;
-          this.setState({board: board});
-          gametext = 'PLAYER ONE WINS';
-          this.setState({activated: !status});
-          return;
-        }
-
-          board[x][y].isCaptured = true;
-
-        if (board[x][y].owner == 0) {
+        if (board[x][y].owner === 0) {
 
             let capture = board[x][y];
             forest[z] = pieces[capture['alt']];
-            this.setState({forest:forest})
-          
+           
           } else {
 
             let capture = board[x][y]
             sky[z2] = pieces[capture['alt']];
-            this.setState({sky:sky})
           } 
       
           board[x][y] = active;
           board[x2][y2] = null;
 
-          this.setState({board: board, moveInProgress: false, activePiece: null })
-          hack();
+          this.setState({board: board, moveInProgress: false, activePiece: null, forest:forest, sky: sky })
           this.switchPlayer();
+          hack();
           //this.forceUpdate(); 
           return;
       } 
     } else if (name !== null && mark === 'bench' && !moving){
-        let currentPiece = pieces[name];
-        
+
+         let currentPiece = pieces[name];
+
         if (turn !== currentPiece.owner) {
             alert("Not this side's turn!");
             return;
-          }
+        }
+
+        if(lion) {
+          alert('You must capture the lion!');
+          return;
+        }
+        
 
         if (currentPiece.owner === 1) {
           dropOrigin = forest.indexOf(currentPiece);
@@ -502,7 +606,6 @@ class App extends React.Component {
   }
 
   isLionUnderCheck (boardstate, player, position) {
-    //console.log(arguments)
     let directions = [
       { row: 1,  col: 0  }, // South
       { row: -1, col: 0  }, // North
@@ -513,10 +616,6 @@ class App extends React.Component {
       { row: 1,  col: 1  }, // Southeast
       { row: -1, col: 1  }, // Northeast
     ]
-    
-    if (boardstate === undefined) {
-      alert('problem')
-    }
     
     for (let i = 0; i < directions.length; i += 1) {
       let x = position[0] + directions[i]['row'];
