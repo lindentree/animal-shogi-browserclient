@@ -200,6 +200,7 @@ class App extends React.Component {
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
     this.reachedLastRow = this.reachedLastRow.bind(this);
+    this.isLionUnderCheck = this.isLionUnderCheck.bind(this);
   }
 
   componentDidMount() {
@@ -301,10 +302,34 @@ class App extends React.Component {
          
         }
 
+        if (active.name === 'playerLion' || active.name === 'enemyLion') {
+          let test = this.reachedLastRow(active, coordinates);
+            if (test) {
+              //console.log('fire')
+              let condition = this.isLionUnderCheck(board, turn, coordinates);
+
+              if (!condition) {
+                console.log('fire')
+                if (active.name === 'playerLion') {
+                  gametext = 'PLAYER ONE WINS';
+                } else {
+                  gametext = 'PLAYER TWO WINS';
+                }
+
+                 board[x][y] = active;
+                 board[x2][y2] = null;
+
+                this.setState({board: board, moveInProgress: false, activated: !status});
+
+              } else {
+                this.switchPlayer();
+              }
+            }
+          
+        }
+
         board[x][y] = active;
         board[x2][y2] = null;
-
-
 
         this.setState({board: board, moveInProgress: false});
         hack();
@@ -340,7 +365,7 @@ class App extends React.Component {
             if (test) {
               active = pieces[active.promote];
             } 
-          }
+        }
 
         if (name == 'playerLion') {
           board[x][y] = active;
@@ -362,8 +387,6 @@ class App extends React.Component {
         }
 
           board[x][y].isCaptured = true;
-
-   
 
         if (board[x][y].owner == 0) {
 
@@ -450,11 +473,6 @@ class App extends React.Component {
     this.setState({ board: board });
   }
 
-  movePiece (coordinates) {
-    let p = this.state.pieces;
-
-  }
-
   reachedLastRow (player, position) {
     
     let p = [[0, 0],[0, 1],[0, 2]];
@@ -483,7 +501,53 @@ class App extends React.Component {
     return false;
   }
 
-  isLionUnderCheck (lion) {
+  isLionUnderCheck (boardstate, player, position) {
+    //console.log(arguments)
+    let directions = [
+      { row: 1,  col: 0  }, // South
+      { row: -1, col: 0  }, // North
+      { row: 0,  col: -1 }, // East
+      { row: 0,  col: 1  }, // West
+      { row: 1,  col: -1 }, // Southwest
+      { row: -1, col: -1 }, // Northwest
+      { row: 1,  col: 1  }, // Southeast
+      { row: -1, col: 1  }, // Northeast
+    ]
+    
+    if (boardstate === undefined) {
+      alert('problem')
+    }
+    
+    for (let i = 0; i < directions.length; i += 1) {
+      let x = position[0] + directions[i]['row'];
+      let y = position[1] + directions[i]['col'];
+
+      let spot = [x, y];
+      let piece;
+
+      if (boardstate[x] === undefined || boardstate[x][y] === undefined || boardstate[x][y] === null) {
+        continue;
+      } else {
+          piece = boardstate[x][y];
+      }
+
+      if (piece.owner === player) {
+        continue;
+      } else {
+
+         let check = this.isValidMove(spot, piece.moves, position);
+         if (check) {
+           return true;
+         } else {
+          continue;
+         }
+      }
+
+      return false;
+
+    }
+
+    return false;
 
   }
 
