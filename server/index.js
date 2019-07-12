@@ -1,12 +1,14 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
+const shrinkRay = require('shrink-ray-current');
 // UNCOMMENT THE DATABASE YOU'D LIKE TO USE
 // var items = require('../database-mysql');
-var users = require('../database-mongo');
+//var users = require('../database-mongo');
 
-var app = express();
+const app = express();
 
 // UNCOMMENT FOR REACT
+app.use(shrinkRay());
 app.use('/', express.static(__dirname + '/../dist'));
 
 

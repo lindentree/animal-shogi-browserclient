@@ -3,7 +3,6 @@ import Square from './Square.jsx';
 
 export default class ForestPieceStand extends React.PureComponent {
 
-
   renderSquare(i, id, mark) {
      return (
     <Square 

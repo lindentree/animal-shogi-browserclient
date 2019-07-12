@@ -17,7 +17,8 @@ export default class Board extends React.PureComponent {
       />
     );
   }
-render() {
+
+  render() {
     return (
       <React.Fragment>
       <SkyPieceStand status={this.props.skystand} handleClick={this.props.handleClick}/>
