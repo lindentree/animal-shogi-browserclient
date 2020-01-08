@@ -26,5 +26,4 @@ const SkyPieceStand = props => {
   );
 }
 
-
 export default SkyPieceStand;

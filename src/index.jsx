@@ -238,7 +238,7 @@ class App extends React.Component {
     activeBoard[end_x][end_y] = null
   
     
-    this.setState({board: activeBoard, moveInProgress: false},
+    this.setState({board: activeBoard, moveInProgress: false, activePiece: null},
       ()=>{}
     );//end move
     this.switchPlayer();
@@ -250,16 +250,20 @@ class App extends React.Component {
 
     if (curPlayer === 0) {
       bench = this.state.forest.slice();
+      slot = bench.indexOf(null);
+      bench[slot] = pieces[piece['alt']];
+      this.setState({forest: bench});
 
     } else {
       bench = this.state.sky.slice();
+      slot = bench.indexOf(null);
+      bench[slot] = pieces[piece['alt']];
+      this.setState({sky: bench});
     }
 
-    slot = bench.indexOf(null);
-    bench[slot] = pieces[piece['alt']];
-    
-    
-
+    this.setState({ moveInProgress: false, activePiece: null},
+      ()=>{}
+    );
   }
 
   dropMethod() {
@@ -371,7 +375,6 @@ class App extends React.Component {
     } else if (moving && name !== null && !dropping && mark === 'board'){
          
         let valid = this.isValidMove(start, active.moves, coordinates);
-        let capture;
 
         if (!valid) {
           alert('Invalid move');
@@ -385,6 +388,8 @@ class App extends React.Component {
           return;
   
         }  
+
+        let capture = board[x][y];
 
         if (active.name === 'playerLion' || active.name === 'enemyLion') {
             let test = this.reachedLastRow(active, coordinates);
@@ -402,7 +407,6 @@ class App extends React.Component {
                   return;
               } else {
                   
-                  let capture = board[x][y];
                   if (capture.name === 'enemyLion' || capture.name === 'playerLion') {
                     if (capture.owner === 1) {
                       gametext = 'PLAYER TWO WINS';
@@ -411,23 +415,14 @@ class App extends React.Component {
                       return;
 
                     } else {
-                        gametext = 'PLAYER ONE WINS';
-                        this.moveMethod(x, y, x2, y2, active);
-                        this.setState({activated: true});
-                        return;
-                     }
+                      gametext = 'PLAYER ONE WINS';
+                      this.moveMethod(x, y, x2, y2, active);
+                      this.setState({activated: true});
+                      return;
+                    }
                   }
 
-                if (board[x][y].owner === 0) {
-
-                  capture = board[x][y];
-                  forest[z] = pieces[capture['alt']];
-           
-                } else {
-
-                  capture = board[x][y]
-                  sky[z2] = pieces[capture['alt']];
-                } 
+                this.captureMethod(capture, turn);
       
                 board[x][y] = active;
                 board[x2][y2] = null;

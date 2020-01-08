@@ -24,7 +24,6 @@ const ForestPieceStand = props => {
       {renderSquare(5, 18, "bench")}
     </div>
   );
-
 }
 
 export default ForestPieceStand;
