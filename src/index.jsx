@@ -248,7 +248,7 @@ class App extends React.Component {
     let bench;
     let slot; 
 
-    if (curPlayer === 0) {
+    if (curPlayer === 1) {
       bench = this.state.forest.slice();
       slot = bench.indexOf(null);
       bench[slot] = pieces[piece['alt']];
@@ -482,13 +482,8 @@ class App extends React.Component {
         }
 
         this.captureMethod(capture, turn);
-      
-          board[x][y] = active;
-          board[x2][y2] = null;
-
-          this.setState({board: board, moveInProgress: false, activePiece: null, forest:forest, sky: sky })
-          this.switchPlayer();
-          hack();
+        this.moveMethod(x, y, x2, y2, active);
+        hack();
           //this.forceUpdate(); 
           return;
      
