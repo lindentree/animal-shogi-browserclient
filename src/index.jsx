@@ -11,7 +11,7 @@ let pieces = {
     alt: 'enemyLion',
     owner: 1,
     position: [3, 1],
-    active: false,
+    activePiece: false,
     isCaptured: false,
     isUnderCheck: false,
     reachedOpp: false,
@@ -232,8 +232,8 @@ class App extends React.Component {
   }
 
   moveMethod(start_x, start_y, end_x, end_y, piece) {
-   
-    let activeBoard = JSON.parse(JSON.stringify(this.state.board));
+
+    let activeBoard = [...this.state.board];
     activeBoard[start_x][start_y] = piece;
     activeBoard[end_x][end_y] = null
   
@@ -249,13 +249,13 @@ class App extends React.Component {
     let slot; 
 
     if (curPlayer === 1) {
-      bench = this.state.forest.slice();
+      bench = [...this.state.forest];
       slot = bench.indexOf(null);
       bench[slot] = pieces[piece['alt']];
       this.setState({forest: bench});
 
     } else {
-      bench = this.state.sky.slice();
+      bench = [...this.state.sky];
       slot = bench.indexOf(null);
       bench[slot] = pieces[piece['alt']];
       this.setState({sky: bench});
@@ -264,46 +264,62 @@ class App extends React.Component {
     this.setState({ moveInProgress: false, activePiece: null},
       ()=>{}
     );
+
+
   }
 
-  dropMethod() {
+  dropMethod(piece, curPlayer, slot, end_x, end_y) {
+    let bench;
+
+    let activeBoard = [...this.state.board];
+    activeBoard[end_x][end_y] = piece;
+
+    if (curPlayer === 1) {
+      bench = [...this.state.forest];
+      bench[slot] = null;
+      this.setState({forest: bench});
+
+    } else {
+      bench = [...this.state.sky];
+      bench[slot] = null;
+      this.setState({sky: bench});
+    }
+
+    this.setState({ board: activeBoard, isDropping: false, moveInProgress: false, activePiece: null},
+      ()=>{}
+    );
+
+    this.switchPlayer();
 
   }
  
   handleClick (e) {
     e.preventDefault();
 
-    let moving = this.state.moveInProgress;
-    let board = JSON.parse(JSON.stringify(this.state.board));
+    let { moveInProgress, activePiece, activated, isDropping, dropOrigin, lion, currentPlayer } = { ...this.state }
 
-    let forest = this.state.forest.slice();
-    let sky = this.state.sky.slice();
-    let z = forest.indexOf(null);
-    let z2 = sky.indexOf(null);;
+    let moving = this.state.moveInProgress;
+    let board = [...this.state.board];
+
+    let forest = [...this.state.forest];
+    let sky = [...this.state.sky];
 
     let mark = e.target.getAttribute('id');
-
-    let active = this.state.activePiece;
-    let status = this.state.activated;
-    let dropping = this.state.isDropping;
-    let dropOrigin = this.state.dropOrigin;
-    let lion = this.state.lion;
-    
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
+
     let coordinates = [x, y];
-    let start = this.state.start.slice();
-    let x2 = start[0];
-    let y2 = start[1];
+
+    let start = [...this.state.start];
+    let [x2, y2] = start;
  
     let name = e.target.getAttribute('name')//string or null
-    let turn = this.state.currentPlayer;
 
-    if (name === null && !moving && !dropping) {
+    if (name === null && !moving && !isDropping) {
       return;
-    } else if (name !== null && !moving && !dropping && mark === 'board') {
+    } else if (name !== null && !moving && !isDropping && mark === 'board') {
         let player = pieces[name].owner;
-          if (turn !== player) {
+          if (currentPlayer !== player) {
             alert("Not this side's turn!");
             return;
           }
@@ -312,9 +328,9 @@ class App extends React.Component {
         this.setState({activePiece: currentPiece, start: coordinates, source: name, moveInProgress: true});
         return;
 
-    } else if (moving && name === null && !dropping && mark === 'board') {
+    } else if (moving && name === null && !isDropping && mark === 'board') {
    
-      let valid = this.isValidMove(start, active.moves, coordinates)
+      let valid = this.isValidMove(start, activePiece.moves, coordinates)
 
       if (valid) {
        
@@ -325,36 +341,36 @@ class App extends React.Component {
         }
 
 
-        if (active.name === 'playerChick' || active.name === 'enemyChick') {
-          let test = this.reachedLastRow(active, coordinates);
+        if (activePiece.name === 'playerChick' || activePiece.name === 'enemyChick') {
+          let test = this.reachedLastRow(activePiece, coordinates);
           if (test) {
-            active = pieces[active.promote];
+            activePiece = pieces[activePiece.promote];
           } 
          
         }
 
-        if (active.name === 'playerLion' || active.name === 'enemyLion') {
+        if (activePiece.name === 'playerLion' || activePiece.name === 'enemyLion') {
           
-          let test = this.reachedLastRow(active, coordinates);
+          let test = this.reachedLastRow(activePiece, coordinates);
             if (test) {
     
               let condition = this.isLionUnderCheck(board, turn, coordinates);
 
               if (!condition) {
                 
-                if (active.name === 'playerLion') {
+                if (activePiece.name === 'playerLion') {
                   gametext = 'PLAYER ONE WINS';
                 } else {
                   gametext = 'PLAYER TWO WINS';
                 }
 
-                this.moveMethod(x, y, x2, y2, active);
+                this.moveMethod(x, y, x2, y2, activePiece);
                 this.setState({activated: true});
                 return;
 
               } else {
 
-                this.moveMethod(x, y, x2, y2, active);
+                this.moveMethod(x, y, x2, y2, activePiece);
                 return;
               }
             } else {
@@ -363,7 +379,7 @@ class App extends React.Component {
           
         }
         
-        this.moveMethod(x, y, x2, y2, active);
+        this.moveMethod(x, y, x2, y2, activePiece);
         hack();
         return;
    
@@ -372,9 +388,9 @@ class App extends React.Component {
           this.setState({moveInProgress: false});
           return;
       }
-    } else if (moving && name !== null && !dropping && mark === 'board'){
+    } else if (moving && name !== null && !isDropping && mark === 'board'){
          
-        let valid = this.isValidMove(start, active.moves, coordinates);
+        let valid = this.isValidMove(start, activePiece.moves, coordinates);
 
         if (!valid) {
           alert('Invalid move');
@@ -382,7 +398,7 @@ class App extends React.Component {
           return;
         }
 
-        if (board[x][y].owner === turn) {
+        if (board[x][y].owner === currentPlayer) {
           alert("Can't capture own piece");
           this.setState({moveInProgress: false});
           return;
@@ -391,18 +407,18 @@ class App extends React.Component {
 
         let capture = board[x][y];
 
-        if (active.name === 'playerLion' || active.name === 'enemyLion') {
-            let test = this.reachedLastRow(active, coordinates);
+        if (activePiece.name === 'playerLion' || activePiece.name === 'enemyLion') {
+            let test = this.reachedLastRow(activePiece, coordinates);
               if (test) {
-                let condition = this.isLionUnderCheck(board, turn, coordinates);
+                let condition = this.isLionUnderCheck(board, currentPlayer, coordinates);
                 if (!condition) {
-                  if (active.name === 'playerLion') {
+                  if (activePiece.name === 'playerLion') {
                     gametext = 'PLAYER ONE WINS';
                   } else {
                     gametext = 'PLAYER TWO WINS';
                   }
 
-                  this.moveMethod(x, y, x2, y2, active);
+                  this.moveMethod(x, y, x2, y2, activePiece);
                   this.setState({activated: true});
                   return;
               } else {
@@ -410,20 +426,20 @@ class App extends React.Component {
                   if (capture.name === 'enemyLion' || capture.name === 'playerLion') {
                     if (capture.owner === 1) {
                       gametext = 'PLAYER TWO WINS';
-                      this.moveMethod(x, y, x2, y2, active);
+                      this.moveMethod(x, y, x2, y2, activePiece);
                       this.setState({activated: true});
                       return;
 
                     } else {
                       gametext = 'PLAYER ONE WINS';
-                      this.moveMethod(x, y, x2, y2, active);
+                      this.moveMethod(x, y, x2, y2, activePiece);
                       this.setState({activated: true});
                       return;
                     }
                   }
 
-                this.captureMethod(capture, turn);
-                this.moveMethod(x, y, x2, y2, active);
+                this.captureMethod(capture, currentPlayer);
+                this.moveMethod(x, y, x2, y2, activePiece);
                 this.setState({lion: true});
               
                 return;
@@ -439,59 +455,55 @@ class App extends React.Component {
             return;
           } else {
               if (name === 'playerLion') {
-                board[x][y] = active;
-                board[x2][y2] = null;
+                this.moveMethod(x, y, x2, y2, activePiece);
                 gametext = 'PLAYER TWO WINS';
-                this.setState({board: board, lion: false, activated: true});
+                this.setState({ lion: false, activated: true });
                 return;
 
              } else if (name === 'enemyLion') {
-                 board[x][y] = active;
-                 board[x2][y2] = null;
-                 gametext = 'PLAYER ONE WINS';
-                 this.setState({board: board, lion: false, activated: true});
-                 return;
+                this.moveMethod(x, y, x2, y2, activePiece);
+                gametext = 'PLAYER ONE WINS';
+                this.setState({ lion: false, activated: true });
+                return;
             }
           }
         }
 
         if (name === 'playerLion') {
-          board[x][y] = active;
-          board[x2][y2] = null;
+          this.moveMethod(x, y, x2, y2, activePiece);
           gametext = 'PLAYER TWO WINS';
-          this.setState({board: board, lion: false, activated: true});
+          this.setState({lion: false, activated: true});
           return;
 
         }  
 
         if (name === 'enemyLion') {
-          board[x][y] = active;
-          board[x2][y2] = null;
+          this.moveMethod(x, y, x2, y2, activePiece);
           gametext = 'PLAYER ONE WINS';
-          this.setState({board: board, lion: false, activated: true});
+          this.setState({lion: false, activated: true});
           return;
         }
 
-        if (active.name === 'playerChick' || active.name === 'enemyChick') {
-            let test = this.reachedLastRow(active, coordinates);
+        if (activePiece.name === 'playerChick' || activePiece.name === 'enemyChick') {
+            let test = this.reachedLastRow(activePiece, coordinates);
             if (test) {
-              active = pieces[active.promote];
+              activePiece = pieces[activePiece.promote];
             } else {
 
             }
         }
 
-        this.captureMethod(capture, turn);
-        this.moveMethod(x, y, x2, y2, active);
+        this.captureMethod(capture, currentPlayer);
+        this.moveMethod(x, y, x2, y2, activePiece);
         hack();
           //this.forceUpdate(); 
           return;
      
     } else if (name !== null && mark === 'bench' && !moving){
 
-         let currentPiece = pieces[name];
+        let currentPiece = pieces[name];
 
-        if (turn !== currentPiece.owner) {
+        if (currentPlayer !== currentPiece.owner) {
             alert("Not this side's turn!");
             return;
         }
@@ -513,23 +525,12 @@ class App extends React.Component {
       this.setState({activePiece: currentPiece, isDropping: true, moveInProgress: false})
       return;
 
-    } else if (name === null && mark === 'board' && dropping) {
-        let bench;
+    } else if (name === null && mark === 'board' && isDropping) {
+      
+      this.dropMethod(activePiece, currentPlayer, dropOrigin, x, y);
+      return;
 
-        if(this.state.currentPlayer === 1) {
-          bench = forest;
-       
-        } else {
-          bench = sky;
-        }
-
-        board[x][y] = active;
-        bench[dropOrigin] = null;
-        this.setState({board:board, activePiece: null, isDropping: false, forest: forest, sky: sky})
-        this.switchPlayer();
-        hack();
-        return;
-      } else if (name !== null && mark === 'board' && dropping || mark === 'bench'){
+      } else if (name !== null && mark === 'board' && isDropping || mark === 'bench'){
           this.setState({isDropping: false})
           alert('Invalid drop');
           return;

@@ -1,7 +1,7 @@
 import React from 'react';
 import Square from './Square.jsx';
 
-const ForestPieceStand = props => {
+const ForestPieceStand = React.memo(props => {
 
   const renderSquare = (i, id, mark) => {
     return (
@@ -24,6 +24,6 @@ const ForestPieceStand = props => {
       {renderSquare(5, 18, "bench")}
     </div>
   );
-}
+});
 
 export default ForestPieceStand;

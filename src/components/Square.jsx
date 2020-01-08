@@ -1,16 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-//create your forceUpdate hook
-function useForceUpdate() {
-    const [value, set] = useState(true); //boolean state
-    return () => set(!value); // toggle the state to force render
-}
-
-const Square = props => {
-   let param = props.piece
-
-   useForceUpdate(param);
-
+const Square = React.memo(props => {
+   let param = props.piece;
    let mark = props.mark;
 
    if (mark === undefined || mark === null) {
@@ -48,6 +39,8 @@ const Square = props => {
   );
 
    }
-}
+});
+
+
 
 export default Square;
