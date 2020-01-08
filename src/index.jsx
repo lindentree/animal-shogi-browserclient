@@ -162,10 +162,10 @@ function refreshPage(){
   setTimeout(location.reload.bind(location), 2500);; 
 }
 
-function hack(){//solves laggy repaint in Safari/mobile browsers
-  let size = 1.001 + Math.random()/1000;
-  window.parent.parent.document.body.style.zoom = size;
-} 
+// function hack(){//solves laggy repaint in Safari/mobile browsers
+//   let size = 1.001 + Math.random()/1000;
+//   window.parent.parent.document.body.style.zoom = size;
+// } 
 
 class App extends React.Component {
   constructor(props) {
@@ -231,8 +231,13 @@ class App extends React.Component {
 
   }
 
-  moveMethod() {
+  moveMethod(start, end, piece) {
 
+    end = piece;
+    start = null;
+
+    this.setState({moveInProgress: false});//end move
+    this.switchPlayer();
   }
 
   captureMethod() {
@@ -302,9 +307,7 @@ class App extends React.Component {
           let test = this.reachedLastRow(active, coordinates);
           if (test) {
             active = pieces[active.promote];
-          } else {
-          
-          }
+          } 
          
         }
 
@@ -330,10 +333,7 @@ class App extends React.Component {
 
               } else {
 
-                  board[x][y] = active;
-                  board[x2][y2] = null;
-                  this.setState({board: board, lion: true, moveInProgress: false})
-                  this.switchPlayer();
+                  this.moveMethod(board[x2][y2], board, active);
                   return;
               }
             } else {
