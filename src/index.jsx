@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-//import axios from 'axios';
 import Board from './components/Board.jsx';
 import GameStatus from './components/GameStatus.jsx';
 
@@ -173,13 +172,13 @@ class App extends React.Component {
     super(props);
     this.state = { 
       board: [
-                  [null, null, null],
-                  [null, null, null],
-                  [null, null, null],
-                  [null, null, null]
-                ],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null],
+                [null, null, null]
+              ],
       sky: [
-             null, null, null, null, null, null
+              null, null, null, null, null, null
            ],
       forest: [
                 null, null, null, null, null, null
@@ -197,6 +196,7 @@ class App extends React.Component {
     }
 
     this.handleClick = this.handleClick.bind(this);
+    this.moveMethod = this.moveMethod.bind(this);
     this.startPiecePosition = this.startPiecePosition.bind(this);
     this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
@@ -208,17 +208,6 @@ class App extends React.Component {
 
     this.startPiecePosition()
 
-    // axios.get('/users')
-    //  .then(function (response) {
-    //    console.log(response);
-    //  })
-    //  .catch(function (error) {
-    //    console.log(error);
-    //  });
-  }
-
-  updatePlayerInfo(text) {
-    return <GameStatus text={text} />
   }
 
   switchPlayer() {
@@ -242,10 +231,18 @@ class App extends React.Component {
 
   }
 
-  captureMethod () {
+  moveMethod() {
 
   }
 
+  captureMethod() {
+
+  }
+
+  dropMethod() {
+
+  }
+ 
   handleClick (e) {
     e.preventDefault();
 
@@ -573,42 +570,31 @@ class App extends React.Component {
 
   reachedLastRow (player, position) {
     
-    let p = [[0, 0],[0, 1],[0, 2]];
-    let e = [[3, 0],[3, 1],[3, 2]];
-
     if (player.owner === 1) {
-    
-      for (let i = 0; i < p.length; i += 1) {
-        if(position[0] === p[i][0] && position[1] === p[i][1]) {
-  
-          return true;
-        } else {
-          continue;
-        }
-      }
+      let finalRow = [[0, 0],[0, 1],[0, 2]];
     } else {
-        for (let i = 0; i < e.length; i += 1) {
-          if(position[0] === e[i][0] && position[1] === e[i][1]) {
-            return true;
-          } else {
-            continue;
-          }
-      }
+      finalRow = [[3, 0],[3, 1],[3, 2]];
     }
+      
+    for (let i = 0; i < finalRow.length; i += 1) {
+      if(position[0] === finalRow[i][0] && position[1] === finalRow[i][1]) {
+        return true;
+      }   
+    } 
 
     return false;
   }
 
   isLionUnderCheck (boardstate, player, position) {
     let directions = [
-      { row: 1,  col: 0  }, // South
-      { row: -1, col: 0  }, // North
+      { row: 1,  col: 0 }, // South
+      { row: -1, col: 0 }, // North
       { row: 0,  col: -1 }, // East
-      { row: 0,  col: 1  }, // West
+      { row: 0,  col: 1 }, // West
       { row: 1,  col: -1 }, // Southwest
       { row: -1, col: -1 }, // Northwest
-      { row: 1,  col: 1  }, // Southeast
-      { row: -1, col: 1  }, // Northeast
+      { row: 1,  col: 1 }, // Southeast
+      { row: -1, col: 1 }, // Northeast
     ]
     
     for (let i = 0; i < directions.length; i += 1) {
@@ -621,19 +607,19 @@ class App extends React.Component {
       if (boardstate[x] === undefined || boardstate[x][y] === undefined || boardstate[x][y] === null) {
         continue;
       } else {
-          piece = boardstate[x][y];
+        piece = boardstate[x][y];
       }
 
       if (piece.owner === player) {
         continue;
       } else {
 
-         let check = this.isValidMove(spot, piece.moves, position);
-         if (check) {
-           return true;
-         } else {
-          continue;
-         }
+        let check = this.isValidMove(spot, piece.moves, position);
+          if (check) {
+            return true;
+          } else {
+            continue;
+          }
       }
 
       return false;
