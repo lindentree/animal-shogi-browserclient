@@ -173,112 +173,13 @@ h1 {
   background-image:url('./assets/bench/6.png'); 
 }
 
-.playerElephant { 
+.piece { 
     width: 85%;
     left: 0px;
     right: 0px;
     top: 0px;
     bottom: 0px;
     margin:auto;
-    content:url('./assets/pieces/forest/elephant.png');
     position: absolute;
 }
 
-.playerChick { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/forest/chick.png');
-    position: absolute; 
-}
-
-.playerGiraffe { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/forest/giraffe.png');
-    position: absolute;
-}
-
-.playerHen { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/forest/hen.png');
-    position: absolute;
-}
-
-.playerLion { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/forest/lion.png');
-    position: absolute;
-}
-
-.enemyElephant { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content: url('./assets/pieces/sky/elephant.png');
-    position: absolute;
-}
-
-.enemyChick { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content: url('./assets/pieces/sky/chick.png');
-    position: absolute; 
-}
-
-.enemyGiraffe { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/sky/giraffe.png');
-    position: absolute; 
-}
-
-.enemyHen { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/sky/hen.png');
-    position: absolute;
-}
-
-.enemyLion {  
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    content:url('./assets/pieces/sky/lion.png');
-    position: absolute;
-}

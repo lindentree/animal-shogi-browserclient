@@ -26,14 +26,15 @@ const Square = React.memo(props => {
 
       <div onClick={props.handleClick} >
         <button className={"square img" + props.id} >
-          <div
+          <img
             id={mark}
-            className={props.piece.name} 
+            src={`./assets/pieces/${props.piece.name}.png`}
+            className="piece" 
             name={props.piece.name} 
             x={props.row} 
             y={props.col}
-         >
-        </div>
+          >
+          </img>
       </button>
     </div>
   );
