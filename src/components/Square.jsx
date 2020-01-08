@@ -6,7 +6,7 @@ function useForceUpdate() {
     return () => set(!value); // toggle the state to force render
 }
 
-function Square(props) {
+const Square = props => {
    let param = props.piece
 
    useForceUpdate(param);

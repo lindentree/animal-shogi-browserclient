@@ -159,7 +159,7 @@ let pieces = {
 }
 
 function refreshPage(){ 
-  setTimeout(location.reload.bind(location), 2500);; 
+  setTimeout(location.reload.bind(location), 2500);
 }
 
 function hack(){//solves laggy repaint in Safari/mobile browsers
@@ -239,12 +239,26 @@ class App extends React.Component {
   
     
     this.setState({board: activeBoard, moveInProgress: false},
-      ()=>{console.log("sanity", this.state.board)}
+      ()=>{}
     );//end move
     this.switchPlayer();
   }
 
-  captureMethod(start, end, piece, curPlay) {
+  captureMethod(piece, curPlayer) {
+    let bench;
+    let slot; 
+
+    if (curPlayer === 0) {
+      bench = this.state.forest.slice();
+
+    } else {
+      bench = this.state.sky.slice();
+    }
+
+    slot = bench.indexOf(null);
+    bench[slot] = pieces[piece['alt']];
+    
+    
 
   }
 
@@ -330,15 +344,13 @@ class App extends React.Component {
                   gametext = 'PLAYER TWO WINS';
                 }
 
-                board[x][y] = active;
-                board[x2][y2] = null;
-                this.setState({board: board, moveInProgress: false, activated: true});
+                this.moveMethod(x, y, x2, y2, active);
+                this.setState({activated: true});
                 return;
 
               } else {
 
                   this.moveMethod(x, y, x2, y2, active);
-                  
                   return;
               }
             } else {
@@ -349,7 +361,6 @@ class App extends React.Component {
         
         this.moveMethod(x, y, x2, y2, active);
         hack();
-        this.switchPlayer();
         return;
    
       } else {
@@ -386,9 +397,8 @@ class App extends React.Component {
                     gametext = 'PLAYER TWO WINS';
                   }
 
-                  board[x][y] = active;
-                  board[x2][y2] = null;
-                  this.setState({board: board, activated: true});
+                  this.moveMethod(x, y, x2, y2, active);
+                  this.setState({activated: true});
                   return;
               } else {
                   
@@ -396,16 +406,14 @@ class App extends React.Component {
                   if (capture.name === 'enemyLion' || capture.name === 'playerLion') {
                     if (capture.owner === 1) {
                       gametext = 'PLAYER TWO WINS';
-                       board[x][y] = active;
-                       board[x2][y2] = null;
-                      this.setState({board: board, activated: true});
+                      this.moveMethod(x, y, x2, y2, active);
+                      this.setState({activated: true});
                       return;
 
                     } else {
                         gametext = 'PLAYER ONE WINS';
-                        board[x][y] = active;
-                        board[x2][y2] = null;
-                        this.setState({board: board, activated: true});
+                        this.moveMethod(x, y, x2, y2, active);
+                        this.setState({activated: true});
                         return;
                      }
                   }
@@ -522,6 +530,7 @@ class App extends React.Component {
           dropOrigin = sky.indexOf(currentPiece); 
           this.setState({dropOrigin: dropOrigin});
         }
+
       this.setState({activePiece: currentPiece, isDropping: true, moveInProgress: false})
       return;
 
