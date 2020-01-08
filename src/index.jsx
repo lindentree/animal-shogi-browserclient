@@ -232,6 +232,7 @@ class App extends React.Component {
   }
 
   moveMethod(start_x, start_y, end_x, end_y, piece) {
+    console.log('move')
 
     let activeBoard = [...this.state.board];
     activeBoard[start_x][start_y] = piece;
@@ -247,6 +248,7 @@ class App extends React.Component {
   captureMethod(piece, curPlayer) {
     let bench;
     let slot; 
+    console.log('capture')
 
     if (curPlayer === 1) {
       bench = [...this.state.forest];
@@ -269,6 +271,7 @@ class App extends React.Component {
   }
 
   dropMethod(piece, curPlayer, slot, end_x, end_y) {
+    console.log('drop')
     let bench;
 
     let activeBoard = [...this.state.board];
@@ -295,6 +298,7 @@ class App extends React.Component {
  
   handleClick (e) {
     e.preventDefault();
+   
 
     let { moveInProgress, activePiece, activated, isDropping, dropOrigin, lion, currentPlayer } = { ...this.state }
 
@@ -303,15 +307,17 @@ class App extends React.Component {
     let sky = [...this.state.sky];
 
     let mark = e.target.getAttribute('id');
+
     let x = parseInt(e.target.getAttribute('x'));
     let y = parseInt(e.target.getAttribute('y'));
-
+    
     let coordinates = [x, y];
 
     let start = [...this.state.start];
     let [x2, y2] = start;
  
     let name = e.target.getAttribute('name')//string or null
+     console.log("weird", name, board[x][y])
 
     if (name === null && !moveInProgress && !isDropping) {
       return;
@@ -357,7 +363,7 @@ class App extends React.Component {
               let condition = this.isLionUnderCheck(board, currentPlayer, coordinates);
 
               if (!condition) {
-                console.log('firing test', activePiece)
+                
                 if (activePiece.name === 'playerLion') {
                   gametext = 'PLAYER ONE WINS';
                 } else {
@@ -388,7 +394,7 @@ class App extends React.Component {
           return;
       }
     } else if (moveInProgress && name !== null && !isDropping && mark === 'board'){
-         
+        console.log('huh', board[x][y].owner)
         let valid = this.isValidMove(start, activePiece.moves, coordinates);
 
         if (!valid) {
@@ -460,7 +466,6 @@ class App extends React.Component {
         }
 
         if (lion) {
-          console.log("double sanity")
           
           if (name !== 'enemyLion' && name !== 'playerLion') {
             alert('You must capture the lion!');
