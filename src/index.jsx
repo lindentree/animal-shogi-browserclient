@@ -162,10 +162,10 @@ function refreshPage(){
   setTimeout(location.reload.bind(location), 2500);; 
 }
 
-// function hack(){//solves laggy repaint in Safari/mobile browsers
-//   let size = 1.001 + Math.random()/1000;
-//   window.parent.parent.document.body.style.zoom = size;
-// } 
+function hack(){//solves laggy repaint in Safari/mobile browsers
+  let size = 1.001 + Math.random()/1000;
+  window.parent.parent.document.body.style.zoom = size;
+} 
 
 class App extends React.Component {
   constructor(props) {
@@ -231,16 +231,20 @@ class App extends React.Component {
 
   }
 
-  moveMethod(start, end, piece) {
-
-    end = piece;
-    start = null;
-
-    this.setState({moveInProgress: false});//end move
+  moveMethod(start_x, start_y, end_x, end_y, piece) {
+   
+    let activeBoard = JSON.parse(JSON.stringify(this.state.board));
+    activeBoard[start_x][start_y] = piece;
+    activeBoard[end_x][end_y] = null
+  
+    
+    this.setState({board: activeBoard, moveInProgress: false},
+      ()=>{console.log("sanity", this.state.board)}
+    );//end move
     this.switchPlayer();
   }
 
-  captureMethod() {
+  captureMethod(start, end, piece, curPlay) {
 
   }
 
@@ -333,7 +337,8 @@ class App extends React.Component {
 
               } else {
 
-                  this.moveMethod(board[x2][y2], board, active);
+                  this.moveMethod(x, y, x2, y2, active);
+                  
                   return;
               }
             } else {
@@ -341,11 +346,8 @@ class App extends React.Component {
             }
           
         }
-
-        board[x][y] = active;
-        board[x2][y2] = null;
-
-        this.setState({board: board, moveInProgress: false});
+        
+        this.moveMethod(x, y, x2, y2, active);
         hack();
         this.switchPlayer();
         return;
@@ -569,9 +571,10 @@ class App extends React.Component {
   }
 
   reachedLastRow (player, position) {
-    
+    let finalRow;
+
     if (player.owner === 1) {
-      let finalRow = [[0, 0],[0, 1],[0, 2]];
+      finalRow = [[0, 0],[0, 1],[0, 2]];
     } else {
       finalRow = [[3, 0],[3, 1],[3, 2]];
     }
