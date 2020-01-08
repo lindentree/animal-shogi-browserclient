@@ -354,8 +354,8 @@ class App extends React.Component {
 
               } else {
 
-                  this.moveMethod(x, y, x2, y2, active);
-                  return;
+                this.moveMethod(x, y, x2, y2, active);
+                return;
               }
             } else {
               
@@ -423,11 +423,9 @@ class App extends React.Component {
                   }
 
                 this.captureMethod(capture, turn);
-      
-                board[x][y] = active;
-                board[x2][y2] = null;
-                this.setState({forest: forest, sky: sky, board: board, moveInProgress: false, lion: true});
-                this.switchPlayer();
+                this.moveMethod(x, y, x2, y2, active);
+                this.setState({lion: true});
+              
                 return;
                }
             } 
@@ -483,16 +481,7 @@ class App extends React.Component {
             }
         }
 
-        if (board[x][y].owner === 0) {
-
-            let capture = board[x][y];
-            forest[z] = pieces[capture['alt']];
-           
-          } else {
-
-            let capture = board[x][y]
-            sky[z2] = pieces[capture['alt']];
-          } 
+        this.captureMethod(capture, turn);
       
           board[x][y] = active;
           board[x2][y2] = null;
