@@ -437,7 +437,7 @@ class App extends React.Component {
                     }
                   }
 
-                this.moveMethod(x, y, x2, y2, activePiece);
+                this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                 this.setState({lion: true});
                 
                 return;
