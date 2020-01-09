@@ -198,7 +198,7 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.moveMethod = this.moveMethod.bind(this);
     this.startPiecePosition = this.startPiecePosition.bind(this);
-    this.switchPlayer = this.switchPlayer.bind(this);
+    //this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
     this.reachedLastRow = this.reachedLastRow.bind(this);
     this.isLionUnderCheck = this.isLionUnderCheck.bind(this);
@@ -210,11 +210,11 @@ class App extends React.Component {
 
   }
 
-  switchPlayer() {
-    let currentPlayer = this.state.currentPlayer;
-    currentPlayer = (currentPlayer === 1) ? 0 : 1;
-    this.setState({'currentPlayer': currentPlayer});
-  }
+  // switchPlayer() {
+  //   let currentPlayer = this.state.currentPlayer;
+  //   currentPlayer = (currentPlayer === 1) ? 0 : 1;
+  //   this.setState({'currentPlayer': currentPlayer});
+  // }
 
   isValidMove(pos, moves, dest) {
 
@@ -231,41 +231,46 @@ class App extends React.Component {
 
   }
 
-  moveMethod(start_x, start_y, end_x, end_y, piece) {
-    console.log('move')
-
+  moveMethod(start_x, start_y, end_x, end_y, piece, player) {
+   
     let activeBoard = [...this.state.board];
+    console.log("turn", player)
+
+    if (activeBoard[start_x][start_y]) {
+      this.captureMethod(activeBoard[start_x][start_y], player);
+
+      activeBoard[start_x][start_y] = piece;
+      activeBoard[end_x][end_y] = null;
+      return;
+
+    }
+
     activeBoard[start_x][start_y] = piece;
-    activeBoard[end_x][end_y] = null
-  
+    activeBoard[end_x][end_y] = null;
+
+    this.setState({board: activeBoard, moveInProgress: false, activePiece: null, currentPlayer: 1 - player},
+        ()=>{ console.log(this.state) }
+    )
     
-    this.setState({board: activeBoard, moveInProgress: false, activePiece: null},
-      ()=>{}
-    );//end move
-    this.switchPlayer();
   }
 
   captureMethod(piece, curPlayer) {
+
     let bench;
     let slot; 
-    console.log('capture')
-
+   
     if (curPlayer === 1) {
       bench = [...this.state.forest];
       slot = bench.indexOf(null);
       bench[slot] = pieces[piece['alt']];
-      this.setState({forest: bench});
+      this.setState({forest: bench, currentPlayer: 0, moveInProgress: false, activePiece: null});
 
     } else {
       bench = [...this.state.sky];
       slot = bench.indexOf(null);
       bench[slot] = pieces[piece['alt']];
-      this.setState({sky: bench});
+      this.setState({sky: bench, currentPlayer: 1, moveInProgress: false, activePiece: null});
     }
-
-    this.setState({ moveInProgress: false, activePiece: null},
-      ()=>{}
-    );
 
 
   }
@@ -280,19 +285,14 @@ class App extends React.Component {
     if (curPlayer === 1) {
       bench = [...this.state.forest];
       bench[slot] = null;
-      this.setState({forest: bench});
+      this.setState({forest: bench, board: activeBoard, isDropping: false, moveInProgress: false, activePiece: null, currentPlayer: 0});
 
     } else {
       bench = [...this.state.sky];
       bench[slot] = null;
-      this.setState({sky: bench});
+      this.setState({sky: bench, board: activeBoard, isDropping: false, moveInProgress: false, activePiece: null, currentPlayer: 1});
     }
 
-    this.setState({ board: activeBoard, isDropping: false, moveInProgress: false, activePiece: null},
-      ()=>{}
-    );
-
-    this.switchPlayer();
 
   }
  
@@ -317,9 +317,13 @@ class App extends React.Component {
     let [x2, y2] = start;
  
     let name = e.target.getAttribute('name')//string or null
-     console.log("weird", name, board[x][y])
+     
 
-    if (name === null && !moveInProgress && !isDropping) {
+    if (mark === 'bench' && name === null) {
+      return;
+    }
+
+    if (name === null && !moveInProgress && !isDropping ) {
       return;
 
     } else if (name !== null && !moveInProgress && !isDropping && mark === 'board') {
@@ -372,20 +376,20 @@ class App extends React.Component {
 
 
                 this.setState({activated: true});
-                this.moveMethod(x, y, x2, y2, activePiece);
+                this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                 
                 return;
 
               } else {
 
-                this.moveMethod(x, y, x2, y2, activePiece);
+                this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                 return;
               }
             } 
         }
         
-        this.moveMethod(x, y, x2, y2, activePiece);
-        hack();
+        this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
+        //hack();
         return;
    
       } else {
@@ -394,7 +398,7 @@ class App extends React.Component {
           return;
       }
     } else if (moveInProgress && name !== null && !isDropping && mark === 'board'){
-        console.log('huh', board[x][y].owner)
+  
         let valid = this.isValidMove(start, activePiece.moves, coordinates);
 
         if (!valid) {
@@ -425,7 +429,7 @@ class App extends React.Component {
             let test = this.reachedLastRow(activePiece, coordinates);
               if (test) {
                 let condition = this.isLionUnderCheck(board, currentPlayer, coordinates);
-                 console.log('sanity')
+                console.log('check sanity')
                 if (!condition) {
                   if (activePiece.name === 'playerLion') {
                     gametext = 'PLAYER ONE WINS';
@@ -433,9 +437,9 @@ class App extends React.Component {
                     gametext = 'PLAYER TWO WINS';
                   }
 
-
+                  this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                   this.setState({activated: true});
-                  this.moveMethod(x, y, x2, y2, activePiece);
+                  
                   
                   return;
               } else {
@@ -443,21 +447,20 @@ class App extends React.Component {
                   if (capture.name === 'enemyLion' || capture.name === 'playerLion') {
                     if (capture.owner === 1) {
                       gametext = 'PLAYER TWO WINS';
-                      this.moveMethod(x, y, x2, y2, activePiece);
+                      this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                       this.setState({activated: true});
                       return;
 
                     } else {
                       gametext = 'PLAYER ONE WINS';
-                      this.moveMethod(x, y, x2, y2, activePiece);
+                      this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                       this.setState({activated: true});
                       return;
                     }
                   }
 
-                this.setState({lion: true});
-                this.captureMethod(capture, currentPlayer);
-                this.moveMethod(x, y, x2, y2, activePiece);
+              this.setState({lion: true});
+              this.moveMethod(x, y, x2, y2, activePiece);
                 
               
                 return;
@@ -466,7 +469,7 @@ class App extends React.Component {
         }
 
         if (lion) {
-          
+          console.log('che sanity')
           if (name !== 'enemyLion' && name !== 'playerLion') {
             alert('You must capture the lion!');
             this.setState({moveInProgress: false});
@@ -474,13 +477,13 @@ class App extends React.Component {
 
           } else {
               if (name === 'playerLion') {
-                this.captureMethod(capture, currentPlayer);
+                this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                 gametext = 'PLAYER TWO WINS';
                 this.setState({ lion: false, activated: true });
                 return;
 
              } else if (name === 'enemyLion') {
-                this.captureMethod(capture, currentPlayer);
+                this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                 gametext = 'PLAYER ONE WINS';
                 this.setState({ lion: false, activated: true });
                 return;
@@ -489,7 +492,7 @@ class App extends React.Component {
         }
 
         if (name === 'playerLion') {
-          this.moveMethod(x, y, x2, y2, activePiece);
+          this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
           gametext = 'PLAYER TWO WINS';
           this.setState({lion: false, activated: true});
           return;
@@ -497,7 +500,7 @@ class App extends React.Component {
         }  
 
         if (name === 'enemyLion') {
-          this.moveMethod(x, y, x2, y2, activePiece);
+          this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
           gametext = 'PLAYER ONE WINS';
           this.setState({lion: false, activated: true});
           return;
@@ -512,10 +515,8 @@ class App extends React.Component {
             }
         }
 
-        this.captureMethod(capture, currentPlayer);
-        this.moveMethod(x, y, x2, y2, activePiece);
+        this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
         hack();
-          //this.forceUpdate(); 
         return;
      
     } else if (name !== null && mark === 'bench' && !moveInProgress){
@@ -534,14 +535,13 @@ class App extends React.Component {
         
         if (currentPiece.owner === 1) {
           dropOrigin = forest.indexOf(currentPiece);
-          this.setState({dropOrigin: dropOrigin});
+          this.setState({dropOrigin: dropOrigin, activePiece: currentPiece, isDropping: true, moveInProgress: false});
         } else {
           dropOrigin = sky.indexOf(currentPiece); 
-          this.setState({dropOrigin: dropOrigin});
+          this.setState({dropOrigin: dropOrigin, activePiece: currentPiece, isDropping: true, moveInProgress: false});
         }
 
-      this.setState({activePiece: currentPiece, isDropping: true, moveInProgress: false})
-      return;
+        return;
 
     } else if (name === null && mark === 'board' && isDropping) {
       
@@ -554,10 +554,9 @@ class App extends React.Component {
           return;
       } else {
           hack();
-          this.switchPlayer();
+        
           return;
       }
-      this.switchPlayer();
   }
 
   startPiecePosition () {

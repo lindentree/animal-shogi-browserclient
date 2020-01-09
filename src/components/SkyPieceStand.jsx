@@ -2,7 +2,6 @@ import React from 'react';
 import Square from './Square.jsx';
 
 const SkyPieceStand = React.memo(props => {
-
   const renderSquare = (i, id, mark) => {
     return (
       <Square 

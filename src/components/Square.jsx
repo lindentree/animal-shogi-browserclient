@@ -28,7 +28,7 @@ const Square = React.memo(props => {
         y={props.col}
       >
         <img 
-          //onClick={props.handleClick}
+          style={{display: param ? 'block' : 'none' }}
           id={mark}
           name={pieceName}
           src={pieceImage} 
