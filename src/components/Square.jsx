@@ -28,7 +28,7 @@ const Square = React.memo(props => {
         y={props.col}
       >
         <img 
-          style={{display: param ? 'block' : 'none' }}
+          style={{visibility: param ? 'visible' : 'hidden' }}
           id={mark}
           name={pieceName}
           src={pieceImage} 

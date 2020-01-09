@@ -162,10 +162,10 @@ function refreshPage(){
   setTimeout(location.reload.bind(location), 2500);
 }
 
-function hack(){//solves laggy repaint in Safari/mobile browsers
-  let size = 1.001 + Math.random()/1000;
-  window.parent.parent.document.body.style.zoom = size;
-} 
+// function hack(){//solves laggy repaint in Safari/mobile browsers
+//   let size = 1.001 + Math.random()/1000;
+//   window.parent.parent.document.body.style.zoom = size;
+// } 
 
 class App extends React.Component {
   constructor(props) {
@@ -234,7 +234,6 @@ class App extends React.Component {
   moveMethod(start_x, start_y, end_x, end_y, piece, player) {
    
     let activeBoard = [...this.state.board];
-    console.log("turn", player)
 
     if (activeBoard[start_x][start_y]) {
       this.captureMethod(activeBoard[start_x][start_y], player);
@@ -249,7 +248,7 @@ class App extends React.Component {
     activeBoard[end_x][end_y] = null;
 
     this.setState({board: activeBoard, moveInProgress: false, activePiece: null, currentPlayer: 1 - player},
-        ()=>{ console.log(this.state) }
+        ()=>{  }
     )
     
   }
@@ -516,7 +515,7 @@ class App extends React.Component {
         }
 
         this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
-        hack();
+        //hack();
         return;
      
     } else if (name !== null && mark === 'bench' && !moveInProgress){
@@ -553,7 +552,7 @@ class App extends React.Component {
           alert('Invalid drop');
           return;
       } else {
-          hack();
+          //hack();
         
           return;
       }
