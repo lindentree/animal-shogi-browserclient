@@ -1,6 +1,6 @@
 {
-  "name": "github-fetcher-fullstack-v2",
-  "version": "1.0.0",
+  "name": "animal-shogi-client",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,7 +9,7 @@
     "react-dev": "webpack -d --watch",
     "server-dev": "nodemon server/index.js"
   },
-  "author": "Beth Johnson",
+  "author": "Linden Chiu",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.7.7",
