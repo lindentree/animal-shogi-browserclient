@@ -162,11 +162,6 @@ function refreshPage(){
   setTimeout(location.reload.bind(location), 2500);
 }
 
-// function hack(){//solves laggy repaint in Safari/mobile browsers
-//   let size = 1.001 + Math.random()/1000;
-//   window.parent.parent.document.body.style.zoom = size;
-// } 
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -198,7 +193,6 @@ class App extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.moveMethod = this.moveMethod.bind(this);
     this.startPiecePosition = this.startPiecePosition.bind(this);
-    //this.switchPlayer = this.switchPlayer.bind(this);
     this.isValidMove = this.isValidMove.bind(this);
     this.reachedLastRow = this.reachedLastRow.bind(this);
     this.isLionUnderCheck = this.isLionUnderCheck.bind(this);
@@ -209,12 +203,6 @@ class App extends React.Component {
     this.startPiecePosition()
 
   }
-
-  // switchPlayer() {
-  //   let currentPlayer = this.state.currentPlayer;
-  //   currentPlayer = (currentPlayer === 1) ? 0 : 1;
-  //   this.setState({'currentPlayer': currentPlayer});
-  // }
 
   isValidMove(pos, moves, dest) {
 
@@ -271,13 +259,11 @@ class App extends React.Component {
       this.setState({sky: bench, currentPlayer: 1, moveInProgress: false, activePiece: null});
     }
 
-
   }
 
   dropMethod(piece, curPlayer, slot, end_x, end_y) {
-    console.log('drop')
+  
     let bench;
-
     let activeBoard = [...this.state.board];
     activeBoard[end_x][end_y] = piece;
 
@@ -292,13 +278,11 @@ class App extends React.Component {
       this.setState({sky: bench, board: activeBoard, isDropping: false, moveInProgress: false, activePiece: null, currentPlayer: 1});
     }
 
-
   }
  
   handleClick (e) {
     e.preventDefault();
    
-
     let { moveInProgress, activePiece, activated, isDropping, dropOrigin, lion, currentPlayer } = { ...this.state }
 
     let board = [...this.state.board];
@@ -316,7 +300,6 @@ class App extends React.Component {
     let [x2, y2] = start;
  
     let name = e.target.getAttribute('name')//string or null
-     
 
     if (mark === 'bench' && name === null) {
       return;
@@ -348,7 +331,6 @@ class App extends React.Component {
           return;
         }
 
-
         if (activePiece.name === 'playerChick' || activePiece.name === 'enemyChick') {
           let test = this.reachedLastRow(activePiece, coordinates);
           if (test) {
@@ -373,14 +355,13 @@ class App extends React.Component {
                   gametext = 'PLAYER TWO WINS';
                 }
 
-
                 this.setState({activated: true});
                 this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
-                
                 return;
 
               } else {
 
+                this.setState({lion: true});
                 this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                 return;
               }
@@ -388,7 +369,6 @@ class App extends React.Component {
         }
         
         this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
-        //hack();
         return;
    
       } else {
@@ -428,7 +408,7 @@ class App extends React.Component {
             let test = this.reachedLastRow(activePiece, coordinates);
               if (test) {
                 let condition = this.isLionUnderCheck(board, currentPlayer, coordinates);
-                console.log('check sanity')
+                
                 if (!condition) {
                   if (activePiece.name === 'playerLion') {
                     gametext = 'PLAYER ONE WINS';
@@ -436,39 +416,37 @@ class App extends React.Component {
                     gametext = 'PLAYER TWO WINS';
                   }
 
-                  this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
                   this.setState({activated: true});
-                  
-                  
+                  this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
+  
                   return;
               } else {
                   
                   if (capture.name === 'enemyLion' || capture.name === 'playerLion') {
                     if (capture.owner === 1) {
-                      gametext = 'PLAYER TWO WINS';
                       this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
-                      this.setState({activated: true});
+                      gametext = 'PLAYER TWO WINS';
+                      this.setState({lion: false, activated: true});
                       return;
 
                     } else {
-                      gametext = 'PLAYER ONE WINS';
                       this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
-                      this.setState({activated: true});
+                      gametext = 'PLAYER ONE WINS';
+                      this.setState({lion: false, activated: true});
                       return;
                     }
                   }
 
-              this.setState({lion: true});
-              this.moveMethod(x, y, x2, y2, activePiece);
+                this.moveMethod(x, y, x2, y2, activePiece);
+                this.setState({lion: true});
                 
-              
                 return;
                }
             } 
         }
 
         if (lion) {
-          console.log('che sanity')
+          
           if (name !== 'enemyLion' && name !== 'playerLion') {
             alert('You must capture the lion!');
             this.setState({moveInProgress: false});
@@ -515,7 +493,6 @@ class App extends React.Component {
         }
 
         this.moveMethod(x, y, x2, y2, activePiece, currentPlayer);
-        //hack();
         return;
      
     } else if (name !== null && mark === 'bench' && !moveInProgress){
@@ -552,7 +529,6 @@ class App extends React.Component {
           alert('Invalid drop');
           return;
       } else {
-          //hack();
         
           return;
       }
@@ -595,6 +571,7 @@ class App extends React.Component {
   }
 
   isLionUnderCheck (boardstate, player, position) {
+    
     let directions = [
       { row: 1,  col: 0 }, // South
       { row: -1, col: 0 }, // North
@@ -636,7 +613,6 @@ class App extends React.Component {
     }
 
     return false;
-
   }
 
   render () {

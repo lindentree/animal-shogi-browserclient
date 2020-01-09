@@ -30,15 +30,6 @@ h1 {
     margin: auto;
 }
 
-#PlayerInfo {
-    position: relative;
-    float: right;
-    width: 30%;
-    margin-right: -250px;
-    padding-top: 0px;
-    margin: 25px;
-}
-
 #forestStand {
     position: relative;
     float: right;
@@ -99,6 +90,16 @@ h1 {
   margin-top: -20%;
 }
   
+}
+
+.piece { 
+    width: 85%;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    margin:auto;
+    position: absolute;
 }
 
 .img1 {
@@ -173,13 +174,14 @@ h1 {
   background-image:url('./assets/bench/6.png'); 
 }
 
-.piece { 
-    width: 85%;
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    margin:auto;
-    position: absolute;
+
+
+#PlayerInfo {
+    position: relative;
+    float: right;
+    width: 30%;
+    margin-right: -250px;
+    padding-top: 0px;
+    margin: 25px;
 }
 
